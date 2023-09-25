@@ -11,7 +11,6 @@ import { BarcodeAdvancedDemoComponent } from './barcode-advanced-demo/barcode-ad
 
 import { ErrorMessageDialogContent, ErrorMessageDialog } from './dialogs/error-message-dialog';
 import { BlockUiDialogContent, BlockUiDialog } from './dialogs/block-ui-dialog';
-import { ImageViewerSettingsDialogContent, ImageViewerSettingsDialog } from "./dialogs/image-viewer-settings-dialog"
 import { BarcodeWriterSettingsDialogContent, BarcodeWriterSettingsDialog } from "./dialogs/barcode-writer-settings-dialog";
 import { BarcodeReaderSettingsDialog, BarcodeReaderSettingsDialogContent } from "./dialogs/barcode-reader-settings-dialog";
 import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog } from "./dialogs/barcode-recognition-result-dialog";
@@ -24,8 +23,6 @@ import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog }
     ErrorMessageDialog,
     BlockUiDialog,
     BlockUiDialogContent,
-    ImageViewerSettingsDialog,
-    ImageViewerSettingsDialogContent,
     BarcodeWriterSettingsDialog,
     BarcodeWriterSettingsDialogContent,
     BarcodeReaderSettingsDialog,
@@ -38,8 +35,6 @@ import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog }
     BlockUiDialogContent,
     ErrorMessageDialog,
     ErrorMessageDialogContent,
-    ImageViewerSettingsDialog,
-    ImageViewerSettingsDialogContent,
     BarcodeWriterSettingsDialog,
     BarcodeWriterSettingsDialogContent,
     BarcodeReaderSettingsDialog,

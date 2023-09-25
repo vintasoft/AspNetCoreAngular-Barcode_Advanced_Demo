@@ -3,7 +3,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { ErrorMessageDialog } from "../dialogs/error-message-dialog";
 import { BlockUiDialog } from "../dialogs/block-ui-dialog";
-import { ImageViewerSettingsDialog } from "../dialogs/image-viewer-settings-dialog"
 import { OpenFileHelper } from './open-file-helper';
 import { BarcodeReaderUiHelper } from './barcode-reader-UI-helper'
 import { BarcodeWriterUiHelper } from './barcode-writer-UI-helper'
@@ -105,40 +104,6 @@ export class BarcodeAdvancedDemoComponent {
 
 
 
-  // === "View" toolbar ===
-
-  /**
-   Creates UI button for showing image viewer settings dialog.
-   */
-  __createImageViewerSettingsButton() {
-    // create the button that allows to show a dialog with image viewer settings
-    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsui-button vsdv-imageViewerSettingsButton',
-      title: 'Show Image Viewer Settings',
-      localizationId: 'imageViewerSettingsButton',
-      onClick: _barcodeAdvancedDemoComponent.__imageViewerSettingsButton_clicked
-    });
-  }
-
-  /**
-   * "Show Image Viewer Settings" button is clicked.
-   * @param event
-   * @param uiElement
-   */
-  __imageViewerSettingsButton_clicked(event: any, uiElement: Vintasoft.Imaging.UI.UIElements.WebUiElementJS) {
-    let docViewer: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
-    if (docViewer != null) {
-      let imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS = docViewer.get_ImageViewer();
-      if (imageViewer != null) {
-        let dlg: ImageViewerSettingsDialog = new ImageViewerSettingsDialog(_barcodeAdvancedDemoComponent.modalService);
-        dlg.imageViewer = imageViewer;
-        dlg.open();
-      }
-    }
-  }
-
-
-
   // === "Tools" toolbar ===
 
   /**
@@ -218,9 +183,6 @@ export class BarcodeAdvancedDemoComponent {
     var barcodeReaderUiHelper = new BarcodeReaderUiHelper(this.modalService, this.__blockUI, this.__unblockUI, this.__showErrorMessage);
     var barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.modalService, this.__showErrorMessage);
 
-    // register the "Image viewer settings" button in web UI elements factory
-    Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("imageViewerSettingsButton", this.__createImageViewerSettingsButton);
-
     // register the "Pan" button in web UI elements factory
     Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("panToolButton", this.__createPanToolButton);
     // register the "Rectangular selection" button in web UI elements factory
@@ -245,18 +207,6 @@ export class BarcodeAdvancedDemoComponent {
       = items.getItemByRegisteredId('uploadFileButton') as Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS;
     if (uploadFileButton != null)
       uploadFileButton.set_FileExtensionFilter('.bmp, .emf, .gif, .ico, .cur, .jpg, .jpeg, .jls, .pcx, .png, .tif, .tiff, .wmf, .jb2, .jbig2, .jp2, .j2k, .j2c, .jpc, .pdf, .docx, .doc, .xlsx, .xls');
-
-    // get the "View" menu panel
-    let viewMenuPanel: Vintasoft.Imaging.UI.Panels.WebUiPanelJS
-      = items.getItemByRegisteredId('viewMenuPanel') as Vintasoft.Imaging.UI.Panels.WebUiPanelJS;
-    // if menu panel is found
-    if (viewMenuPanel != null) {
-      // get items of menu panel
-      let viewMenuPanelItems: Vintasoft.Imaging.UI.UIElements.WebUiElementCollectionJS
-        = viewMenuPanel.get_Items();
-      // add the "Image viewer settings" button to the menu panel
-      viewMenuPanelItems.insertItem(viewMenuPanelItems.get_Count() - 1, 'imageViewerSettingsButton');
-    }
 
     // get the "Visual tools" menu panel
     let visualToolsToolbarPanel: Vintasoft.Imaging.DocumentViewer.Panels.WebUiVisualToolsToolbarPanelJS
