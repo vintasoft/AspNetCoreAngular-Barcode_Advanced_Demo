@@ -1,6 +1,5 @@
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BarcodeReaderHelper } from "./barcode-reader-helper";
-import { BarcodeReaderSettingsDialog } from "../dialogs/barcode-reader-settings-dialog";
 import { BarcodeRecognitionResultDialog } from "../dialogs/barcode-recognition-result-dialog";
 
 let _barcodeReaderUiHelper: BarcodeReaderUiHelper;
@@ -17,8 +16,10 @@ export class BarcodeReaderUiHelper {
 
   // Helper class for barcode reader.
   _barcodeReaderHelper: BarcodeReaderHelper | null = null;
+  // Barcode reader settings
+  _barcodeReaderSettings: Vintasoft.Barcode.WebBarcodeReaderSettingsJS;
   // Dialog that allows to view and change settings of barcode reader.
-  _barcodeReaderSettingsDialog: BarcodeReaderSettingsDialog;
+  _barcodeReaderSettingsDialog: Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiPropertyGridDialogJS;
   // Button for barcode reading.
   _readBarcodesButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
   // Textarea that displays barcode reading information.
@@ -33,11 +34,18 @@ export class BarcodeReaderUiHelper {
     this._unblockUiFunc = unblockUiFunc;
     this._showErrorMessageFunc = showErrorMessageFunc;
 
-    let barcodeReaderSettings: Vintasoft.Barcode.WebBarcodeReaderSettingsJS
-      = new Vintasoft.Barcode.WebBarcodeReaderSettingsJS();
-    barcodeReaderSettings.set_SearchQRModel1Barcodes(true);
-    this._barcodeReaderSettingsDialog = new BarcodeReaderSettingsDialog(this.modalService);
-    this._barcodeReaderSettingsDialog.barcodeReaderSettings = barcodeReaderSettings;
+    this._barcodeReaderSettings = new Vintasoft.Barcode.WebBarcodeReaderSettingsJS();
+    this._barcodeReaderSettings.set_SearchQRModel1Barcodes(true);
+    // create the property grid with information about interactive field properties
+    var propertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcodeReaderSettings);
+    // create the barcode reader settings dialog
+    this._barcodeReaderSettingsDialog = new Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiPropertyGridDialogJS(
+      propertyGrid,
+      {
+        title: Vintasoft.Shared.VintasoftLocalizationJS.getStringConstant("vsdv-barcodeReaderSettingsDialog-title"),
+        cssClass: "vsui-dialog barcodeReaderSettings",
+        localizationId: "barcodeReaderSettingsDialog"
+      });
   }
 
 
@@ -126,7 +134,7 @@ export class BarcodeReaderUiHelper {
 
     _barcodeReaderUiHelper._docViewer = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
     let imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS = _barcodeReaderUiHelper._docViewer.get_ImageViewer();
-    _barcodeReaderUiHelper._barcodeReaderHelper.sendReadBarcodeRequest(uiElement, imageViewer, _barcodeReaderUiHelper._barcodeReaderSettingsDialog.get_Settings());
+    _barcodeReaderUiHelper._barcodeReaderHelper.sendReadBarcodeRequest(uiElement, imageViewer, _barcodeReaderUiHelper._barcodeReaderSettings);
   }
 
   /**
@@ -136,7 +144,7 @@ export class BarcodeReaderUiHelper {
    */
   __barcodeReaderSettingsButton_clicked(event: any, uiElement: Vintasoft.Imaging.UI.UIElements.WebUiElementJS) {
     // show the barcode reader settings dialog
-    _barcodeReaderUiHelper._barcodeReaderSettingsDialog.open();
+    _barcodeReaderUiHelper._barcodeReaderSettingsDialog.show();
   }
 
   /**
@@ -161,6 +169,8 @@ export class BarcodeReaderUiHelper {
     Vintasoft.Shared.subscribeToEvent(imageViewerControl, 'pointerdown', _barcodeReaderUiHelper.__onViewerDoubleClick);
     // specify that barcode recognition result must be shown when right mouse button is clicked over the recognized barcode in image viewer
     imageViewer.set_ContextMenuFunc(_barcodeReaderUiHelper.__onViewerDoubleClick);
+
+    _barcodeReaderUiHelper._docViewer.get_Items().addItem(_barcodeReaderUiHelper._barcodeReaderSettingsDialog);
   }
 
   /**

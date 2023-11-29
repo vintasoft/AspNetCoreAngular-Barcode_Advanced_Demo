@@ -33,9 +33,9 @@ The project demonstrates how to recognize and generate barcodes in ASP.NET Core 
    Vintasoft.Imaging.ImagingGlobalSettings.Register("REG_USER", "REG_EMAIL", "EXPIRATION_DATE", "REG_CODE");
    ```
 
-3. Build the project ("AspNetCoreAngularBarcodeAdvancedDemo.Net7.csproj" file) in Visual Studio or using .NET CLI:
+3. Build the project ("AspNetCoreAngularBarcodeAdvancedDemo.Net8.csproj" file) in Visual Studio or using .NET CLI:
    ```
-   dotnet build AspNetCoreAngularBarcodeAdvancedDemo.Net7.csproj
+   dotnet build AspNetCoreAngularBarcodeAdvancedDemo.Net8.csproj
    ```
 
 4. Run compiled application and try to recognize and generate barcodes.

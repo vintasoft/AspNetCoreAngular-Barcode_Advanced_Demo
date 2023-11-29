@@ -15,8 +15,8 @@ export class BarcodeWriterSettingsDialogContent {
   public event: EventEmitter<any> = new EventEmitter();
 
   // WebPropertyGridJS object for barcode writer settings
-  private _1dBarcoderSettingsControl: PropertyGridControlJS | null = null;
-  private _2dBarcoderSettingsControl: PropertyGridControlJS | null = null;
+  private _1dBarcoderSettingsControl: Vintasoft.Imaging.DocumentViewer.Panels.WebUiPropertyGridPanelJS | null = null;
+  private _2dBarcoderSettingsControl: Vintasoft.Imaging.DocumentViewer.Panels.WebUiPropertyGridPanelJS | null = null;
 
 
   constructor(public activeModal: NgbActiveModal) {
@@ -27,17 +27,27 @@ export class BarcodeWriterSettingsDialogContent {
   ngOnInit() {
     let propertyGrid;
     if (this.barcode1DWriterSettings != null) {
-      // create WebPropertyGridJS object for _barcode1DWriterSettings
+      // create WebPropertyGridJS object for barcode1DWriterSettings
       propertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this.barcode1DWriterSettings);
       // create PropertyGridControlJS
-      this._1dBarcoderSettingsControl = new PropertyGridControlJS(propertyGrid, "Barcode1DSettingsPropertyGrid", { hideNestedElements: false, showReadOnlyElements: false });
-      this._1dBarcoderSettingsControl.createMarkup();
+      this._1dBarcoderSettingsControl = new Vintasoft.Imaging.DocumentViewer.Panels.WebUiPropertyGridPanelJS(
+        propertyGrid,
+        {
+          cssClass: "vsui-dialogContent",
+          css: { "padding": "0px", "border": "1px solid gray" }
+        });
     }
 
     if (this.barcode2DWriterSettings != null) {
+      // create WebPropertyGridJS object for barcode2DWriterSettings
       propertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this.barcode2DWriterSettings);
-      this._2dBarcoderSettingsControl = new PropertyGridControlJS(propertyGrid, "Barcode2DSettingsPropertyGrid", { hideNestedElements: false, showReadOnlyElements: false });
-      this._2dBarcoderSettingsControl.createMarkup();
+      // create PropertyGridControlJS
+      this._2dBarcoderSettingsControl = new Vintasoft.Imaging.DocumentViewer.Panels.WebUiPropertyGridPanelJS(
+        propertyGrid,
+        {
+          cssClass: "vsui-dialogContent",
+          css: { "padding": "0px", "border": "1px solid gray" }
+        });
     }
 
     if (this.activeBarcodeWriterSettings == this.barcode2DWriterSettings) {
@@ -55,19 +65,19 @@ export class BarcodeWriterSettingsDialogContent {
     let barcodeDimensionSelectDiv: HTMLSelectElement = document.getElementById("barcodeDimensionSelect") as HTMLSelectElement;
     let currentDimension: string = barcodeDimensionSelectDiv.value;
 
-    let barcode1DSettingsPropertyGridElement: HTMLElement | null = document.getElementById("Barcode1DSettingsPropertyGrid");
-    let barcode2DSettingsPropertyGridElement: HTMLElement | null = document.getElementById("Barcode2DSettingsPropertyGrid");
-    if (barcode1DSettingsPropertyGridElement != null && barcode2DSettingsPropertyGridElement != null) {
-      if (currentDimension === "1D") {
-        this.activeBarcodeWriterSettings = this.barcode1DWriterSettings;
-        barcode1DSettingsPropertyGridElement.style.display = "block";
-        barcode2DSettingsPropertyGridElement.style.display = "none";
-      }
-      else {
-        this.activeBarcodeWriterSettings = this.barcode2DWriterSettings;
-        barcode1DSettingsPropertyGridElement.style.display = "none";
-        barcode2DSettingsPropertyGridElement.style.display = "block";
-      }
+    if (currentDimension === "1D") {
+      this.activeBarcodeWriterSettings = this.barcode1DWriterSettings;
+      if (this._1dBarcoderSettingsControl != null)
+        this._1dBarcoderSettingsControl.show();
+      if (this._2dBarcoderSettingsControl != null)
+        this._2dBarcoderSettingsControl.hide();
+    }
+    else {
+      this.activeBarcodeWriterSettings = this.barcode2DWriterSettings;
+      if (this._1dBarcoderSettingsControl != null)
+        this._1dBarcoderSettingsControl.hide();
+      if (this._2dBarcoderSettingsControl != null)
+        this._2dBarcoderSettingsControl.show();
     }
   }
 

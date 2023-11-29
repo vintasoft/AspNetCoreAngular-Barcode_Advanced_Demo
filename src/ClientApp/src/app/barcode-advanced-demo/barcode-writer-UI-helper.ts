@@ -1,6 +1,3 @@
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BarcodeWriterSettingsDialog } from "../dialogs/barcode-writer-settings-dialog";
-
 let _barcodeWriterUiHelper: BarcodeWriterUiHelper;
 
 /**
@@ -9,33 +6,52 @@ let _barcodeWriterUiHelper: BarcodeWriterUiHelper;
 export class BarcodeWriterUiHelper {
 
   _docViewer: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS | null = null;
+  _writeBarcodeButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+  _dialogInitialized: boolean;
+
+  // create settings
+  _barcode1DWriterSettings: Vintasoft.Barcode.Web1DBarcodeWriterSettingsJS;
+  _barcode2DWriterSettings: Vintasoft.Barcode.Web2DBarcodeWriterSettingsJS;
+
+  // create property grids
+  _barcode1DPropertyGrid: Vintasoft.Shared.WebPropertyGridJS;
+  _barcode2DPropertyGrid: Vintasoft.Shared.WebPropertyGridJS;
+
+  // create dialog for changing settings
+  _barcodeWriterSettingsDialog: Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiMultiPropertyGridDialogJS;
+
   _showErrorMessageFunc: Function;
 
-  // Barcode writer.
-  _barcodeWriter: Vintasoft.Barcode.WebBarcodeWriterJS;
-  // Settings of barcode writer.
-  _barcodeWriterSettingsDialog: BarcodeWriterSettingsDialog;
-  // Button for barcode writing.
-  _writeBarcodeButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
 
 
-
-  constructor(private modalService: NgbModal, showErrorMessageFunc: Function) {
+  constructor(showErrorMessageFunc: Function) {
     _barcodeWriterUiHelper = this;
+    this._dialogInitialized = false;
+
+    // create settings
+    this._barcode1DWriterSettings = new Vintasoft.Barcode.Web1DBarcodeWriterSettingsJS();
+    this._barcode2DWriterSettings = new Vintasoft.Barcode.Web2DBarcodeWriterSettingsJS();
+
+    // create property grids
+    this._barcode1DPropertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcode1DWriterSettings);
+    this._barcode2DPropertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcode2DWriterSettings);
+
+    // create dialog for changing settings
+    this._barcodeWriterSettingsDialog = new Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiMultiPropertyGridDialogJS(
+      {
+        title: "Barcode dimension:",
+        selectors: [
+          { text: "1D", value: "1d", localizationId: "1d", propertyGrid: this._barcode1DPropertyGrid },
+          { text: "2D", value: "2d", localizationId: "2d", propertyGrid: this._barcode2DPropertyGrid },
+        ],
+        selectedIndex: 0
+      },
+      {
+        title: "Barcode writer settings"
+      }
+    );
 
     this._showErrorMessageFunc = showErrorMessageFunc;
-
-    let barcodeWriterSettings: Vintasoft.Barcode.Web1DBarcodeWriterSettingsJS = new Vintasoft.Barcode.Web1DBarcodeWriterSettingsJS();
-
-    this._barcodeWriterSettingsDialog = new BarcodeWriterSettingsDialog(modalService);
-    this._barcodeWriterSettingsDialog.barcode1DWriterSettings = barcodeWriterSettings;
-    this._barcodeWriterSettingsDialog.barcode2DWriterSettings = new Vintasoft.Barcode.Web2DBarcodeWriterSettingsJS();
-    this._barcodeWriterSettingsDialog.activeBarcodeWriterSettings = barcodeWriterSettings;
-
-    this._barcodeWriter = new Vintasoft.Barcode.WebBarcodeWriterJS(Vintasoft.Shared.WebServiceJS.defaultBarcodeService);
-    this._barcodeWriterSettingsDialog.event.subscribe(receivedEntry => {
-      this._barcodeWriter.set_Settings(receivedEntry.barcodeWriterSettings);
-    });
   }
 
 
@@ -104,15 +120,77 @@ export class BarcodeWriterUiHelper {
    * "Write barcode" button is clicked.
    */
   __writeBarcodeButton_clicked(event: any, uiElement: any) {
-    if (_barcodeWriterUiHelper._writeBarcodeButton == null)
+    if (_barcodeWriterUiHelper._writeBarcodeButton == null) {
       return;
+    }
 
-    _barcodeWriterUiHelper._docViewer = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
+    // create the barcode writer
+    let barcodeWriter = new Vintasoft.Barcode.WebBarcodeWriterJS(Vintasoft.Shared.WebServiceJS.defaultBarcodeService);
 
-    _barcodeWriterUiHelper._barcodeWriter.getBarcodeAsBase64Image(_barcodeWriterUiHelper.__writeBarcode_success, _barcodeWriterUiHelper.__writeBarcode_error);
+    // get the barcode writer settings from the barcode writer settings dialog
+    let barcodeWriterSettings;
+    // if current selected property grid index equals 1D settings index
+    if (_barcodeWriterUiHelper._barcodeWriterSettingsDialog.get_SelectedPropertyGridIndex() == 0) {
+      barcodeWriterSettings = _barcodeWriterUiHelper._barcode1DWriterSettings;
+    }
+    else {
+      barcodeWriterSettings = _barcodeWriterUiHelper._barcode2DWriterSettings;
+    }
+
+    let writeBarcodeButton = _barcodeWriterUiHelper._writeBarcodeButton;
+    let showErrorMessageFunc = _barcodeWriterUiHelper._showErrorMessageFunc;
+
+    // set the barcode writer settings
+    barcodeWriter.set_Settings(barcodeWriterSettings);
+    // send an asynchronous request for generting the barcode image as a Base64 image
+    barcodeWriter.getBarcodeAsBase64Image(
+      function (data: any) {
+        // get barcode image
+        var imageAsBase64string = data.barcodeImage;
+        // upload barcode image to the server
+        Vintasoft.Imaging.VintasoftFileAPI.uploadBase64Image(
+          imageAsBase64string,
+          function (data: any) {
+            var docViewer = uiElement.get_RootControl();
+            var imageViewer = docViewer.get_ImageViewer();
+
+            // get image collection of image viewer
+            var images = imageViewer.get_Images();
+            // get count of images in image collection
+            var count = images.get_Count();
+
+            // create new image
+            var image = new Vintasoft.Shared.WebImageJS(new Vintasoft.Shared.WebImageSourceJS(data.imageInfo.fileInfo.id), data.imageInfo.pageIndex);
+            // add new image to the image collection
+            images.add(image);
+
+            // set focus to the added image
+            imageViewer.set_FocusedIndex(count);
+
+            // enable the "Generate barcode" button
+            let writeBarcodeButtonElement: HTMLButtonElement = writeBarcodeButton.get_DomElement() as HTMLButtonElement;
+            writeBarcodeButtonElement.disabled = false;
+          },
+          function (data: any) {
+            // show the error message
+            showErrorMessageFunc(data);
+
+            // enable the "Generate barcode" button
+            let writeBarcodeButtonElement: HTMLButtonElement = writeBarcodeButton.get_DomElement() as HTMLButtonElement;
+            writeBarcodeButtonElement.disabled = false;
+          });
+      },
+      function (data: any) {
+        // show the error message
+        showErrorMessageFunc(data);
+
+        // enable the "Generate barcode" button
+        let writeBarcodeButtonElement: HTMLButtonElement = writeBarcodeButton.get_DomElement() as HTMLButtonElement;
+        writeBarcodeButtonElement.disabled = false;
+      });
 
     // disable the "Generate barcode" button
-    let writeBarcodeButtonElement: HTMLButtonElement = _barcodeWriterUiHelper._writeBarcodeButton.get_DomElement() as HTMLButtonElement;
+    let writeBarcodeButtonElement: HTMLButtonElement = writeBarcodeButton.get_DomElement() as HTMLButtonElement;
     writeBarcodeButtonElement.disabled = true;
   }
 
@@ -120,80 +198,13 @@ export class BarcodeWriterUiHelper {
    * "Barcode writer settings" button is clicked.
    */
   __barcodeWriterSettingsButton_clicked(event: any, uiElement: any) {
-    _barcodeWriterUiHelper._docViewer = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
+    _barcodeWriterUiHelper._docViewer = uiElement.get_RootControl();
 
-    _barcodeWriterUiHelper._barcodeWriterSettingsDialog.open();
+    if (!_barcodeWriterUiHelper._dialogInitialized) {
+      _barcodeWriterUiHelper._docViewer?.get_Items().addItem(_barcodeWriterUiHelper._barcodeWriterSettingsDialog);
+      _barcodeWriterUiHelper._dialogInitialized = true;
+    }
+
+    _barcodeWriterUiHelper._barcodeWriterSettingsDialog.show();
   }
-
-  /**
-   * Barcode generation is finished successfully.
-   * @param data Information about created barcode.
-   */
-  __writeBarcode_success(data: any) {
-    // get barcode image
-    let imageAsBase64string: string = data.barcodeImage;
-    // upload barcode image to the server
-    Vintasoft.Imaging.VintasoftFileAPI.uploadBase64Image(imageAsBase64string, _barcodeWriterUiHelper.__saveBarcodeImage_success, _barcodeWriterUiHelper.__saveBarcodeImage_error);
-  }
-
-  /**
-   * Barcode generation is failed.
-   * @param data Information about error.
-   */
-  __writeBarcode_error(data: any) {
-    if (_barcodeWriterUiHelper._writeBarcodeButton == null)
-      return;
-
-    // show the error message
-    _barcodeWriterUiHelper._showErrorMessageFunc(data);
-
-    // enable the "Generate barcode" button
-    let writeBarcodeButtonElement: HTMLButtonElement = _barcodeWriterUiHelper._writeBarcodeButton.get_DomElement() as HTMLButtonElement;
-    writeBarcodeButtonElement.disabled = false;
-  }
-
-  /**
-   * Barcode image is successfully uploaded to the server.
-   */
-  __saveBarcodeImage_success(data: any) {
-    if (_barcodeWriterUiHelper._docViewer == null || _barcodeWriterUiHelper._writeBarcodeButton == null)
-      return;
-
-    let imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS = _barcodeWriterUiHelper._docViewer.get_ImageViewer();
-
-    // get image collection of image viewer
-    let images: Vintasoft.Shared.WebImageCollectionJS = imageViewer.get_Images();
-    // get count of images in image collection
-    let count: number = images.get_Count();
-
-    // create new image
-    let image: Vintasoft.Shared.WebImageJS
-      = new Vintasoft.Shared.WebImageJS(new Vintasoft.Shared.WebImageSourceJS(data.imageInfo.fileInfo.id), data.imageInfo.pageIndex);
-    // add new image to the image collection
-    images.add(image);
-
-    // set focus to the added image
-    imageViewer.set_FocusedIndex(count);
-
-    // enable the "Generate barcode" button
-    let writeBarcodeButtonElement: HTMLButtonElement = _barcodeWriterUiHelper._writeBarcodeButton.get_DomElement() as HTMLButtonElement;
-    writeBarcodeButtonElement.disabled = false;
-  }
-
-  /**
-   * Barcode uploading is failed.
-   * @param data Information about error.
-   */
-  __saveBarcodeImage_error(data: any) {
-    if (_barcodeWriterUiHelper._writeBarcodeButton == null)
-      return;
-
-    // show the error message
-    _barcodeWriterUiHelper._showErrorMessageFunc(data);
-
-    // enable the "Generate barcode" button
-    let writeBarcodeButtonElement: HTMLButtonElement = _barcodeWriterUiHelper._writeBarcodeButton.get_DomElement() as HTMLButtonElement;
-    writeBarcodeButtonElement.disabled = false;
-  }
-
 }

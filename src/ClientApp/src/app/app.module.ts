@@ -11,8 +11,6 @@ import { BarcodeAdvancedDemoComponent } from './barcode-advanced-demo/barcode-ad
 
 import { ErrorMessageDialogContent, ErrorMessageDialog } from './dialogs/error-message-dialog';
 import { BlockUiDialogContent, BlockUiDialog } from './dialogs/block-ui-dialog';
-import { BarcodeWriterSettingsDialogContent, BarcodeWriterSettingsDialog } from "./dialogs/barcode-writer-settings-dialog";
-import { BarcodeReaderSettingsDialog, BarcodeReaderSettingsDialogContent } from "./dialogs/barcode-reader-settings-dialog";
 import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog } from "./dialogs/barcode-recognition-result-dialog";
 
 @NgModule({
@@ -23,10 +21,6 @@ import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog }
     ErrorMessageDialog,
     BlockUiDialog,
     BlockUiDialogContent,
-    BarcodeWriterSettingsDialog,
-    BarcodeWriterSettingsDialogContent,
-    BarcodeReaderSettingsDialog,
-    BarcodeReaderSettingsDialogContent,
     BarcodeRecognitionResultDialog,
     BarcodeRecognitionResultDialogContent
   ],
@@ -35,10 +29,6 @@ import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog }
     BlockUiDialogContent,
     ErrorMessageDialog,
     ErrorMessageDialogContent,
-    BarcodeWriterSettingsDialog,
-    BarcodeWriterSettingsDialogContent,
-    BarcodeReaderSettingsDialog,
-    BarcodeReaderSettingsDialogContent,
     BarcodeRecognitionResultDialog,
     BarcodeRecognitionResultDialogContent
   ],

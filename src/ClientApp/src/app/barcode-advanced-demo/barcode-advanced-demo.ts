@@ -40,6 +40,8 @@ export class BarcodeAdvancedDemoComponent {
   ngOnInit() {
     // get identifier of current HTTP session
     this.httpClient.get<any>('api/Session/GetSessionId').subscribe(data => {
+      Vintasoft.Shared.VintasoftLocalizationJS.setStringConstant("vsdv-barcodeReaderSettingsDialog-title", "Barcode reader settings");
+
       // set the session identifier
       Vintasoft.Shared.WebImagingEnviromentJS.set_SessionId(data.sessionId);
 
@@ -54,6 +56,8 @@ export class BarcodeAdvancedDemoComponent {
 
       // create the document viewer settings
       let docViewerSettings: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerSettingsJS = new Vintasoft.Imaging.DocumentViewer.WebDocumentViewerSettingsJS("documentViewerContainer", "documentViewer");
+      // enable image uploading from URL
+      docViewerSettings.set_CanUploadImageFromUrl(true);
 
       // initialize main menu of document viewer
       this.__initMenu(docViewerSettings);
@@ -72,9 +76,6 @@ export class BarcodeAdvancedDemoComponent {
       Vintasoft.Shared.subscribeToEvent(this._docViewer, 'asyncOperationFinished', this.__docViewer_asyncOperationFinished)
       // subscribe to the asyncOperationFailed event of document viewer
       Vintasoft.Shared.subscribeToEvent(this._docViewer, 'asyncOperationFailed', this.__docViewer_asyncOperationFailed)
-
-      // initialize visual tools
-      this.__initializeVisualTools(this._docViewer);
 
       // get the image viewer of document viewer
       let imageViewer1: Vintasoft.Imaging.UI.WebImageViewerJS = this._docViewer.get_ImageViewer();
@@ -181,7 +182,7 @@ export class BarcodeAdvancedDemoComponent {
    */
   __registerNewUiElements() {
     var barcodeReaderUiHelper = new BarcodeReaderUiHelper(this.modalService, this.__blockUI, this.__unblockUI, this.__showErrorMessage);
-    var barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.modalService, this.__showErrorMessage);
+    var barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.__showErrorMessage);
 
     // register the "Pan" button in web UI elements factory
     Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("panToolButton", this.__createPanToolButton);
@@ -275,22 +276,6 @@ export class BarcodeAdvancedDemoComponent {
       thumbnailViewer.set_ThumbnailPadding(padding);
       thumbnailViewer.set_DisplayThumbnailCaption(true);
     }
-  }
-
-
-
-  // === Visual Tools ===
-
-  /**
-   * Initializes visual tools.
-   * @param docViewer The document viewer.
-   */
-  __initializeVisualTools(docViewer: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS) {
-    let panTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS = docViewer.getVisualToolById('PanTool');
-    let panCursor: string = "url('Content/Cursors/CloseHand.cur'), auto";
-
-    panTool.set_Cursor('pointer');
-    panTool.set_ActionCursor(panCursor);
   }
 
 
