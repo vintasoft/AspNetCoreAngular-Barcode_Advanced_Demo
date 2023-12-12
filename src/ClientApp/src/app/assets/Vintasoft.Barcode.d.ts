@@ -5,7 +5,7 @@
 // granted by VintaSoft Ltd. This notice may not be removed or otherwise
 // altered under any circumstances.
 // This code may NOT be used apart of the VintaSoft product.
-// NAMESPACE
+﻿// NAMESPACE
 declare module Vintasoft.Barcode {
 
   // ===== ENUMS =====
