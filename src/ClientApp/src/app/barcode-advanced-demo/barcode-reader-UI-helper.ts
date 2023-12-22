@@ -19,7 +19,7 @@ export class BarcodeReaderUiHelper {
   // Barcode reader settings
   _barcodeReaderSettings: Vintasoft.Barcode.WebBarcodeReaderSettingsJS;
   // Dialog that allows to view and change settings of barcode reader.
-  _barcodeReaderSettingsDialog: Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiPropertyGridDialogJS;
+  _barcodeReaderSettingsDialog: Vintasoft.Imaging.UI.Dialogs.WebUiPropertyGridDialogJS;
   // Button for barcode reading.
   _readBarcodesButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
   // Textarea that displays barcode reading information.
@@ -39,7 +39,7 @@ export class BarcodeReaderUiHelper {
     // create the property grid with information about interactive field properties
     var propertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcodeReaderSettings);
     // create the barcode reader settings dialog
-    this._barcodeReaderSettingsDialog = new Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiPropertyGridDialogJS(
+    this._barcodeReaderSettingsDialog = new Vintasoft.Imaging.UI.Dialogs.WebUiPropertyGridDialogJS(
       propertyGrid,
       {
         title: Vintasoft.Shared.VintasoftLocalizationJS.getStringConstant("vsdv-barcodeReaderSettingsDialog-title"),
