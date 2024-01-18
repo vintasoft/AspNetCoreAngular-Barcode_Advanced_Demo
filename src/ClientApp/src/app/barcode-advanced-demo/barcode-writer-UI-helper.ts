@@ -18,7 +18,7 @@ export class BarcodeWriterUiHelper {
   _barcode2DPropertyGrid: Vintasoft.Shared.WebPropertyGridJS;
 
   // create dialog for changing settings
-  _barcodeWriterSettingsDialog: Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiMultiPropertyGridDialogJS;
+  _barcodeWriterSettingsDialog: Vintasoft.Imaging.UI.Dialogs.WebUiMultiPropertyGridDialogJS;
 
   _showErrorMessageFunc: Function;
 
@@ -37,7 +37,7 @@ export class BarcodeWriterUiHelper {
     this._barcode2DPropertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcode2DWriterSettings);
 
     // create dialog for changing settings
-    this._barcodeWriterSettingsDialog = new Vintasoft.Imaging.DocumentViewer.Dialogs.WebUiMultiPropertyGridDialogJS(
+    this._barcodeWriterSettingsDialog = new Vintasoft.Imaging.UI.Dialogs.WebUiMultiPropertyGridDialogJS(
       {
         title: "Barcode dimension:",
         selectors: [
