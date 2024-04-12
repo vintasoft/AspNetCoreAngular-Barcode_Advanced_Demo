@@ -58,6 +58,7 @@ export class BarcodeAdvancedDemoComponent {
       let docViewerSettings: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerSettingsJS = new Vintasoft.Imaging.DocumentViewer.WebDocumentViewerSettingsJS("documentViewerContainer", "documentViewer");
       // enable image uploading from URL
       docViewerSettings.set_CanUploadImageFromUrl(true);
+      docViewerSettings.set_CanClearSessionCache(true);
 
       // initialize main menu of document viewer
       this.__initMenu(docViewerSettings);
