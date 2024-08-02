@@ -281,7 +281,7 @@ export class BarcodeReaderHelper {
     let information: string = "";
     if (barcodeInfoArray.length == 0) {
       // show a message with the barcode recognition result
-      information += "No barcodes found.\n\n You should try to change barcode recognition settings, for example decrease scan interval, add new scan direction, etc if you are sure that image contains a barcode.\n\n Please send image with barcode to support@vintasoft.com if you cannot recognize barcode - we will do the best to help you.";
+      information += "No barcodes found.\n\nYou should try to change barcode recognition settings, for example decrease scan interval, add new scan direction, etc if you are sure that image contains a barcode.\n\nPlease send image with barcode to support@vintasoft.com if you cannot recognize barcode - we will do the best to help you.";
     }
     // else
     else {

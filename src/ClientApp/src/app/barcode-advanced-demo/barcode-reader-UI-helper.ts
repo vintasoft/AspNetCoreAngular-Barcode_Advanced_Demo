@@ -259,23 +259,16 @@ export class BarcodeReaderUiHelper {
       highLightTool.selectItem(item);
       // get information about the recognized barcode
       let barcodeInfo: any = _barcodeReaderUiHelper._barcodeReaderHelper.getBarcodeInformation(item.data);
-      let barcodeQualityTestInfo: object | null = null;
-      // if information about quality tests exist
-      if (barcodeInfo.printQualityTest != null)
-        // get information about the print quality test of recognized barcode
-        barcodeQualityTestInfo = barcodeInfo.printQualityTest;
-
-      if (barcodeQualityTestInfo != null)
-        _barcodeReaderUiHelper.__showBarcodeResultDialog(barcodeInfo, barcodeQualityTestInfo);
+      if (barcodeInfo != null)
+        _barcodeReaderUiHelper.__showBarcodeResultDialog(barcodeInfo);
     }
   }
 
   /**
    * Shows the dialog with barcode recognition result.
    * @param barcodeInfo Information about recognized barcode.
-   * @param barcodeQualityTestInfo Information about print quality test of recognized barcode.
    */
-  __showBarcodeResultDialog(barcodeInfo: object, barcodeQualityTestInfo: object) {
+  __showBarcodeResultDialog(barcodeInfo: object) {
     // create a modal window with the barcode reading result
     let dlg: BarcodeRecognitionResultDialog = new BarcodeRecognitionResultDialog(_barcodeReaderUiHelper.modalService);
     dlg.barcodeRecognitionResult = barcodeInfo;
