@@ -53,10 +53,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="Vintasoft.Barcode" Version="15.0.4.1" />
-    <PackageReference Include="Vintasoft.Barcode.SkiaSharp" Version="15.0.4.1" />
-    <PackageReference Include="Vintasoft.Barcode.Web.Services" Version="15.0.4.1" />
-    <PackageReference Include="Vintasoft.Barcode.AspNetCore.ApiControllers" Version="15.0.4.1" />
+    <PackageReference Include="Vintasoft.Barcode" Version="15.0.5.1" />
+    <PackageReference Include="Vintasoft.Barcode.SkiaSharp" Version="15.0.5.1" />
+    <PackageReference Include="Vintasoft.Barcode.Web.Services" Version="15.0.5.1" />
+    <PackageReference Include="Vintasoft.Barcode.AspNetCore.ApiControllers" Version="15.0.5.1" />
     <PackageReference Include="Vintasoft.Imaging" Version="12.5.2.1" />
     <PackageReference Include="Vintasoft.Imaging.Drawing.SkiaSharp" Version="12.5.2.1" />
     <PackageReference Include="Vintasoft.Imaging.Jbig2Codec" Version="9.5.2.1" />
