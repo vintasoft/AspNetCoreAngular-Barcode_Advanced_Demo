@@ -85,7 +85,7 @@ export class BarcodeAdvancedDemoComponent {
       // specify that image viewer must show images in the fit width mode
       imageViewer1.set_ImageSizeMode(new Vintasoft.Imaging.WebImageSizeModeEnumJS('FitToWidth'));
       // set 300 dpi resolution in image viewer
-      imageViewer1.set_RenderingSettings(new Vintasoft.Shared.WebRenderingSettingsJS({ x: 300, y: 300 }));
+      imageViewer1.set_RenderingSettings(new Vintasoft.Shared.WebRenderingSettingsJS(new Vintasoft.Shared.WebResolutionJS(300, 300)));
 
       // create the progress image
       let progressImage: HTMLImageElement = new Image();
@@ -205,14 +205,13 @@ export class BarcodeAdvancedDemoComponent {
     let items: Vintasoft.Imaging.UI.UIElements.WebUiElementCollectionJS
       = docViewerSettings.get_Items();
 
-    let uploadFileButton: Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS
-      = items.getItemByRegisteredId('uploadFileButton') as Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS;
-    if (uploadFileButton != null)
-      uploadFileButton.set_FileExtensionFilter('.bmp, .emf, .gif, .ico, .cur, .jpg, .jpeg, .jls, .pcx, .png, .tif, .tiff, .wmf, .jb2, .jbig2, .jp2, .j2k, .j2c, .jpc, .pdf, .docx, .doc, .xlsx, .xls');
+    let uploadAndOpenFileButton: Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS = items.getItemByRegisteredId("uploadAndOpenFileButton") as Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS;
+    if (uploadAndOpenFileButton != null)
+      uploadAndOpenFileButton.set_FileExtensionFilter(".bmp, .cur, .doc, .docx, .gif, .ico, .j2k, .j2c, .jb2, .jbig2, .jp2, .jpc, .jpeg, .jpg, .jls, .pbm, .pcx, .pdf, .png, .tga, .tif, .tiff, .xls, .xlsx");
 
     // get the "Visual tools" menu panel
-    let visualToolsToolbarPanel: Vintasoft.Imaging.DocumentViewer.Panels.WebUiVisualToolsToolbarPanelJS
-      = items.getItemByRegisteredId("visualToolsToolbarPanel") as Vintasoft.Imaging.DocumentViewer.Panels.WebUiVisualToolsToolbarPanelJS;
+    let visualToolsToolbarPanel: Vintasoft.Imaging.UI.Panels.WebUiVisualToolsToolbarPanelJS
+      = items.getItemByRegisteredId("visualToolsToolbarPanel") as Vintasoft.Imaging.UI.Panels.WebUiVisualToolsToolbarPanelJS;
     // if menu panel founded
     if (visualToolsToolbarPanel != null) {
       // get items of visual tool menu panel
@@ -247,8 +246,8 @@ export class BarcodeAdvancedDemoComponent {
       sidePanelItems.addItem('barcodeWritingPanel');
     }
     // get the thumbnail viewer panel of document viewer
-    let thumbnailViewerPanel: Vintasoft.Imaging.DocumentViewer.Panels.WebUiThumbnailViewerPanelJS
-      = items.getItemByRegisteredId('thumbnailViewerPanel') as Vintasoft.Imaging.DocumentViewer.Panels.WebUiThumbnailViewerPanelJS;
+    let thumbnailViewerPanel: Vintasoft.Imaging.UI.Panels.WebUiThumbnailViewerPanelJS
+      = items.getItemByRegisteredId('thumbnailViewerPanel') as Vintasoft.Imaging.UI.Panels.WebUiThumbnailViewerPanelJS;
     // if panel is found
     if (thumbnailViewerPanel != null)
       // subscribe to the "actived" event of the thumbnail viewer panel of document viewer

@@ -32,7 +32,6 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/app/assets/Vintasoft.Imaging.css",
-              "src/app/assets/Vintasoft.Imaging.DocumentViewer.css",
               "src/styles.css"
             ],
             "scripts": [
@@ -83,10 +82,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build:production"
+              "buildTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build:production"
             },
             "development": {
-              "browserTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build:development",
+              "buildTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build:development",
               "proxyConfig": "proxy.conf.js"
             }
           },
@@ -95,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build"
+            "buildTarget": "AspNetCoreAngularBarcodeAdvancedDemo:build"
           }
         },
         "test": {
@@ -143,7 +142,6 @@
       }
     }
   },
-  "defaultProject": "AspNetCoreAngularBarcodeAdvancedDemo",
   "cli": {
     "analytics": false
   }

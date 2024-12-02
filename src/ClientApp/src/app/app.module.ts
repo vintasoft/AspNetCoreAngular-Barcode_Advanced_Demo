@@ -24,14 +24,6 @@ import { BarcodeRecognitionResultDialogContent, BarcodeRecognitionResultDialog }
     BarcodeRecognitionResultDialog,
     BarcodeRecognitionResultDialogContent
   ],
-  entryComponents: [
-    BlockUiDialog,
-    BlockUiDialogContent,
-    ErrorMessageDialog,
-    ErrorMessageDialogContent,
-    BarcodeRecognitionResultDialog,
-    BarcodeRecognitionResultDialogContent
-  ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
