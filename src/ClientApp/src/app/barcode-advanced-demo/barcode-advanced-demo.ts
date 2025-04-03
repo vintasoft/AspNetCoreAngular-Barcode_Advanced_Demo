@@ -207,7 +207,7 @@ export class BarcodeAdvancedDemoComponent {
 
     let uploadAndOpenFileButton: Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS = items.getItemByRegisteredId("uploadAndOpenFileButton") as Vintasoft.Imaging.UI.UIElements.WebUiUploadFileButtonJS;
     if (uploadAndOpenFileButton != null)
-      uploadAndOpenFileButton.set_FileExtensionFilter(".bmp, .cur, .doc, .docx, .gif, .ico, .j2k, .j2c, .jb2, .jbig2, .jp2, .jpc, .jpeg, .jpg, .jls, .pbm, .pcx, .pdf, .png, .tga, .tif, .tiff, .xls, .xlsx");
+      uploadAndOpenFileButton.set_FileExtensionFilter(".bmp, .cur, .doc, .docx, .gif, .ico, .j2k, .j2c, .jb2, .jbig2, .jp2, .jpc, .jpeg, .jpg, .jls, .pbm, .pcx, .pdf, .png, .tga, .tif, .tiff, .svg, .xls, .xlsx");
 
     // get the "Visual tools" menu panel
     let visualToolsToolbarPanel: Vintasoft.Imaging.UI.Panels.WebUiVisualToolsToolbarPanelJS

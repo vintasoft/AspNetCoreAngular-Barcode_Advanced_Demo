@@ -36,6 +36,7 @@ export class BarcodeReaderUiHelper {
 
     this._barcodeReaderSettings = new Vintasoft.Barcode.WebBarcodeReaderSettingsJS();
     this._barcodeReaderSettings.set_SearchQRModel1Barcodes(true);
+    this._barcodeReaderSettings.set_PharmacodeMaxValue(1000000000);
     // create the property grid with information about interactive field properties
     var propertyGrid = new Vintasoft.Shared.WebPropertyGridJS(this._barcodeReaderSettings);
     // create the barcode reader settings dialog

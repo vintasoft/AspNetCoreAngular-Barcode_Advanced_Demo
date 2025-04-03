@@ -1971,6 +1971,17 @@ declare module Vintasoft.Barcode {
     set_PharmacodeMinPadding(value: number): void;
 
     /**
+     * Gets the maximum barcode value of Pharmacode barcode.
+     */
+    get_PharmacodeMaxValue(): number;
+
+    /**
+     * Sets the maximum barcode value of Pharmacode barcode.
+     * @param value Maximum barcode value of Pharmacode barcode.
+     */
+    set_PharmacodeMaxValue(value: number): void;
+
+    /**
      * Gets a value indicating whether the barcode reader must interpret FNC characters in DotCode barcodes.
      */
     get_DotCodeInterpretFncCharacters(): boolean;
