@@ -1982,6 +1982,17 @@ declare module Vintasoft.Barcode {
     set_PharmacodeMaxValue(value: number): void;
 
     /**
+     * Gets a value indicating whether the barcode reader accepts Pharmacode barcode, which has all bars with the same width.
+     */
+    get_SearchOneBarWidePharmacode(): boolean;
+
+    /**
+     * Sets a value indicating whether the barcode reader accepts Pharmacode barcode, which has all bars with the same width.
+     * @param value False - the barcode reader does not accept Pharmacode barcode, which has all bars with the same width; True - the barcode reader accepts Pharmacode barcode, which has all bars with the same width. Default value is False.
+     */
+    set_SearchOneBarWidePharmacode(value: boolean): void;
+
+    /**
      * Gets a value indicating whether the barcode reader must interpret FNC characters in DotCode barcodes.
      */
     get_DotCodeInterpretFncCharacters(): boolean;
