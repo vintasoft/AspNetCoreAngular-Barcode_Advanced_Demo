@@ -63,7 +63,7 @@ export class BarcodeWriterUiHelper {
     // create the button that allows to start the asynchronous barcode generation process
     _barcodeWriterUiHelper._writeBarcodeButton
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'vsui-button writeBarcode',
+        cssClass: 'writeBarcode',
         title: 'Write barcode',
         localizationId: 'writeBarcodeButton',
         css: {
@@ -75,7 +75,7 @@ export class BarcodeWriterUiHelper {
     // create the button that allows to view and change the barcode writer settings
     let barcodeWriterSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'vsui-button barcodeWriterSettings',
+        cssClass: 'barcodeWriterSettings',
         title: 'Barcode writer settings',
         localizationId: 'barcodeWriterSettingsButton',
         css: {
@@ -106,7 +106,7 @@ export class BarcodeWriterUiHelper {
     // create the button that allows to open/close the barcode generation panel
     let panelOpenButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'vsui-button barcodeWriter',
+        cssClass: 'barcodeWriter',
         title: 'Barcode writing',
         localizationId: 'barcodeWriterPanelButton'
       });

@@ -57,7 +57,7 @@ export class BarcodeReaderUiHelper {
   createBarcodeReadingPanel() {
     // create the button that allows to start the asynchronous barcode recognition process
     _barcodeReaderUiHelper._readBarcodesButton = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsui-button readBarcodes',
+      cssClass: 'readBarcodes',
       title: 'Read barcodes',
       localizationId: 'readBarcodesButton',
       css: {
@@ -69,7 +69,7 @@ export class BarcodeReaderUiHelper {
     // create the button that allows to view and change the barcode reader settings
     let barcodeReaderSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'vsui-button barcodeReaderSettings',
+        cssClass: 'barcodeReaderSettings',
         title: 'Barcode reader settings',
         localizationId: 'barcodeReaderSettingsButton',
         css: {
@@ -99,7 +99,7 @@ export class BarcodeReaderUiHelper {
     // create the button that allows to open/close the barcode recognition panel
     let panelOpenButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'vsui-button barcodeReader',
+        cssClass: 'barcodeReader',
         title: 'Barcode reading',
         localizationId: 'barcodeReaderPanelButton'
       });

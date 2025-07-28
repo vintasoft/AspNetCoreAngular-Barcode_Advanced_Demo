@@ -113,7 +113,7 @@ export class BarcodeAdvancedDemoComponent {
    */
   __createPanToolButton() {
     return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsui-button vsdv-tools-panButton',
+      cssClass: 'vsdv-tools-panButton',
       title: 'Pan',
       localizationId: 'panToolButton',
       onClick: _barcodeAdvancedDemoComponent.__panToolButton_clicked
@@ -148,7 +148,7 @@ export class BarcodeAdvancedDemoComponent {
    */
   __createRectangularSelectionToolButton() {
     return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsui-button vsdv-tools-rectSelectionButton',
+      cssClass: 'vsdv-tools-rectSelectionButton',
       title: 'Rectangular selection',
       localizationId: 'rectangularSelectionToolButton',
       onClick: _barcodeAdvancedDemoComponent.__rectangularSelectionToolButton_clicked
