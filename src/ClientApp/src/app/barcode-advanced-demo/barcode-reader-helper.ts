@@ -193,7 +193,8 @@ export class BarcodeReaderHelper {
       return;
 
     // get the rectangular selection tool
-    let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS | null = _barcodeReaderHelper.__getRectangularSelectionTool(_barcodeReaderHelper._imageViewer);
+    let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS | null =
+      _barcodeReaderHelper.__getVisualToolByName(_barcodeReaderHelper._imageViewer, "RectangularSelection");
     // if tool exists
     if (rectangularSelectionTool != null) {
       // clear the selection
@@ -214,7 +215,8 @@ export class BarcodeReaderHelper {
     let visualTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS = imageViewer.get_VisualTool();
     if (visualTool != null) {
       // get the rectangular selection tool
-      let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS | null = _barcodeReaderHelper.__getRectangularSelectionTool(imageViewer);
+      let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS | null =
+        _barcodeReaderHelper.__getVisualToolByName(_barcodeReaderHelper._imageViewer as Vintasoft.Imaging.UI.WebImageViewerJS, "RectangularSelection") as Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS;
       if (rectangularSelectionTool != null) {
         // if rectangular selection tool active
         if (rectangularSelectionTool.get_IsEnabled()) {
@@ -259,16 +261,27 @@ export class BarcodeReaderHelper {
   /**
    Returns the rectangular selection tool.
    @param {object} imageViewer Image viewer.
-   */
-  __getRectangularSelectionTool(imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS): Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS | null {
-    let compositeTool: Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS = imageViewer.get_VisualTool() as Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS;
-    if (compositeTool != null) {
-      // get the rectangular selection tool
-      return compositeTool.getTool(2) as Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS;
+   @param {string} visualToolName Visual tool name.
+  */
+  __getVisualToolByName(imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS, visualToolName: string): Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS | null {
+    let visualTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS = imageViewer.get_VisualTool();
+    if (visualTool != null) {
+      if (visualTool.get_Name().startsWith("Composite:")) {
+        let compositeVisualTool: Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS =
+          visualTool as Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS;
+        var visualTools = compositeVisualTool.get_VisualTools();
+        for (var i = 0; i < visualTools.length; i++) {
+          if (visualTools[i].get_Name() == visualToolName)
+            return visualTools[i];
+        }
+      }
+      else {
+        if (visualTool.get_Name() == visualToolName)
+          return visualTool;
+      }
     }
     return null;
   }
-
 
 
   // === Create highlight objects ===

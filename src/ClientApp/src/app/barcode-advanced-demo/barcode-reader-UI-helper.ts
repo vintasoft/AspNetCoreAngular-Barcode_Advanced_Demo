@@ -55,29 +55,6 @@ export class BarcodeReaderUiHelper {
    * Creates UI panel with barcode recognition functionality.
    */
   createBarcodeReadingPanel() {
-    // create the button that allows to start the asynchronous barcode recognition process
-    _barcodeReaderUiHelper._readBarcodesButton = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'readBarcodes',
-      title: 'Read barcodes',
-      localizationId: 'readBarcodesButton',
-      css: {
-        "margin-left": "5px"
-      },
-      onClick: _barcodeReaderUiHelper.__readBarcodesButton_clicked
-    });
-
-    // create the button that allows to view and change the barcode reader settings
-    let barcodeReaderSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
-      = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'barcodeReaderSettings',
-        title: 'Barcode reader settings',
-        localizationId: 'barcodeReaderSettingsButton',
-        css: {
-          "margin-left": "5px"
-        },
-        onClick: _barcodeReaderUiHelper.__barcodeReaderSettingsButton_clicked
-      });
-
     // create the text area, where information about recognized barcodes will be shown
     _barcodeReaderUiHelper._recognizedInformationTextarea = new Vintasoft.Imaging.UI.UIElements.WebUiTextareaElementJS({
       text: "Please do the following steps for reading barcode:\n\n1. Select region on image using the selection tool if barcodes must be searched in the region.\n\n2. Click the 'Barcode Reader Settings' button and specify necessary settings.\n\n3. Click the 'Read Barcodes' button and barcode recognition results will be shown in this text box.\n\n4. Click on highlighted barcode in image viewer and you will see an extended information about recognized barcode.",
@@ -107,8 +84,7 @@ export class BarcodeReaderUiHelper {
     // create an UI panel, which allows to recognize barcodes in image and see the barcode recognition results
     let barcodeReadingPanel: Vintasoft.Imaging.UI.Panels.WebUiPanelJS
       = new Vintasoft.Imaging.UI.Panels.WebUiPanelJS(
-        [Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById('rectangularSelectionToolButton'),
-          _barcodeReaderUiHelper._readBarcodesButton, barcodeReaderSettingsButton, _barcodeReaderUiHelper._recognizedInformationTextarea],
+        [_barcodeReaderUiHelper._recognizedInformationTextarea],
         { cssClass: 'vsui-sidePanel-content' },
         panelOpenButton
       );
@@ -122,6 +98,29 @@ export class BarcodeReaderUiHelper {
     // subscribe to the "activated" event of the barcode recognition panel
     Vintasoft.Shared.subscribeToEvent(barcodeReadingPanel, 'activated', _barcodeReaderUiHelper.__barcodeReadingPanel_activated);
     return barcodeReadingPanel;
+  }
+
+  createReadBarcodesButton() {
+    _barcodeReaderUiHelper._readBarcodesButton = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
+      cssClass: "readBarcodes",
+      title: "Read barcodes",
+      localizationId: "readBarcodesButton",
+      css: { "margin-left": "5px" },
+      onClick: _barcodeReaderUiHelper.__readBarcodesButton_clicked
+    });
+
+    return _barcodeReaderUiHelper._readBarcodesButton;
+  }
+
+  createBarcodeReaderSettingsButton() {
+    // create the button that allows to view and change the barcode reader settings
+    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
+      cssClass: "barcodeReaderSettings",
+      title: "Barcode reader settings",
+      localizationId: "barcodeReaderSettingsButton",
+      css: { "margin-left": "5px" },
+      onClick: _barcodeReaderUiHelper.__barcodeReaderSettingsButton_clicked
+    });
   }
 
   /**

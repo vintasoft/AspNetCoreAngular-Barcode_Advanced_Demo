@@ -57,9 +57,9 @@ export class BarcodeWriterUiHelper {
 
 
   /**
-   * Creates UI panel with barcode creation functionality.
+   * Creates UI button that allows to generate barcode image.
    */
-  createBarcodeWritingPanel() {
+  createWriteBarcodeButton() {
     // create the button that allows to start the asynchronous barcode generation process
     _barcodeWriterUiHelper._writeBarcodeButton
       = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
@@ -72,9 +72,15 @@ export class BarcodeWriterUiHelper {
         onClick: _barcodeWriterUiHelper.__writeBarcodeButton_clicked
       });
 
+    return _barcodeWriterUiHelper._writeBarcodeButton;
+  }
+
+  /**
+   * Creates UI button that allows to show dialog with barcode writer settings.
+   */
+  createBarcodeWriterSettingsButton() {
     // create the button that allows to view and change the barcode writer settings
-    let barcodeWriterSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
-      = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
+    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
         cssClass: 'barcodeWriterSettings',
         title: 'Barcode writer settings',
         localizationId: 'barcodeWriterSettingsButton',
@@ -83,37 +89,6 @@ export class BarcodeWriterUiHelper {
         },
         onClick: _barcodeWriterUiHelper.__barcodeWriterSettingsButton_clicked
       });
-
-    // create the text area with instructions how to create barcode
-    let informationAboutWritingTextarea: Vintasoft.Imaging.UI.UIElements.WebUiTextareaElementJS
-      = new Vintasoft.Imaging.UI.UIElements.WebUiTextareaElementJS({
-        text: "Please do the following steps for writing barcode:\n1. Click the 'Barcode Writer Settings' button and specify necessary settings.\n\n2. Click the 'Write Barcode' button and new barcode image will be added to image viewer.",
-        localizationId: 'barcodeWritingInstructionMessage',
-        readonly: true,
-        css: {
-          position: "relative",
-          width: "100%",
-          height: "calc(100% - 45px)",
-          "line-height": 1,
-          "border-top": "1px solid #dddddd",
-          "border-bottom": "1px solid #dddddd",
-          "border-right": "0px",
-          "border-left": "0px",
-          resize: "none",
-        }
-      });
-
-    // create the button that allows to open/close the barcode generation panel
-    let panelOpenButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS
-      = new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'barcodeWriter',
-        title: 'Barcode writing',
-        localizationId: 'barcodeWriterPanelButton'
-      });
-
-    // create an UI panel, which allows to generate barcode image
-    return new Vintasoft.Imaging.UI.Panels.WebUiPanelJS([_barcodeWriterUiHelper._writeBarcodeButton, barcodeWriterSettingsButton, informationAboutWritingTextarea],
-      { cssClass: 'vsui-sidePanel-content' }, panelOpenButton);
   }
 
   /**

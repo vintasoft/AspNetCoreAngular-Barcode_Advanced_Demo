@@ -26,6 +26,9 @@ export class BarcodeAdvancedDemoComponent {
   // Dialog that allows to block UI.
   _blockUiDialog: BlockUiDialog | null = null;
 
+  _barcodeReaderUiHelper: BarcodeReaderUiHelper | null = null;
+  _barcodeWriterUiHelper: BarcodeWriterUiHelper | null = null;
+
 
 
   constructor(public modalService: NgbModal, private httpClient: HttpClient) {
@@ -50,6 +53,9 @@ export class BarcodeAdvancedDemoComponent {
       Vintasoft.Shared.WebServiceJS.defaultImageCollectionService = new Vintasoft.Shared.WebServiceControllerJS("vintasoft/api/MyVintasoftImageCollectionApi");
       Vintasoft.Shared.WebServiceJS.defaultImageService = new Vintasoft.Shared.WebServiceControllerJS("vintasoft/api/MyVintasoftImageApi");
       Vintasoft.Shared.WebServiceJS.defaultBarcodeService = new Vintasoft.Shared.WebServiceControllerJS("vintasoft/api/MyVintasoftBarcodeApi");
+
+      this._barcodeReaderUiHelper = new BarcodeReaderUiHelper(this.modalService, this.__blockUI, this.__unblockUI, this.__showErrorMessage);
+      this._barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.__showErrorMessage);
 
       // register new UI elements
       this.__registerNewUiElements();
@@ -93,10 +99,22 @@ export class BarcodeAdvancedDemoComponent {
       // specify that the image viewer must use the progress image for indicating the image loading progress
       imageViewer1.set_ProgressImage(progressImage);
 
-      // create the composite visual tool, which allows to highligh barcode recongition results in image viewer, select rectangular region on image in image viewer and pan image in image viewer
-      let compositeTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS = this._docViewer.getVisualToolById('HighlightTool,PanTool,RectangularSelectionTool');
-      // set the composite visual tool as active visual tool in image viewer
-      this._docViewer.set_CurrentVisualTool(compositeTool);
+      // names of visual tools in composite visual tool
+      let visualToolNames: string = "HighlightTool,PanTool";
+      // if touch device is used
+      if (this.__isTouchDevice()) {
+        // get zoom tool from document viewer
+        let zoomTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS = this._docViewer.getVisualToolById('ZoomTool');
+        // specify that zoom tool should not disable context menu
+        zoomTool.set_DisableContextMenu(false);
+
+        // add name of zoom tool to the names of visual tools of composite visual tool
+        visualToolNames = visualToolNames + ",ZoomTool";
+      }
+      // get the visual tool
+      let visualTool: Vintasoft.Imaging.UI.VisualTools.WebVisualToolJS =
+        this._docViewer.getVisualToolById(visualToolNames);
+      this._docViewer.set_CurrentVisualTool(visualTool);
 
       // copy the default file to the uploaded image files directory and open the file
       this._openFileHelper = new OpenFileHelper(this.modalService, this._docViewer, this.__showErrorMessage);
@@ -112,34 +130,20 @@ export class BarcodeAdvancedDemoComponent {
    * Creates UI button for activating the visual tool, which allows to pan images in image viewer.
    */
   __createPanToolButton() {
-    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsdv-tools-panButton',
-      title: 'Pan',
-      localizationId: 'panToolButton',
-      onClick: _barcodeAdvancedDemoComponent.__panToolButton_clicked
-    });
-  }
-
-  /**
-   * "Pan" button is clicked.
-   * @param event
-   * @param uiElement
-   */
-  __panToolButton_clicked(event: any, uiElement: Vintasoft.Imaging.UI.UIElements.WebUiElementJS) {
-    let docViewer: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
-    if (docViewer != null) {
-      let imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS = docViewer.get_ImageViewer();
-      if (imageViewer != null) {
-        let compositeTool: Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS = imageViewer.get_VisualTool() as Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS;
-
-        let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS
-          = compositeTool.getTool(2) as Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS;
-        rectangularSelectionTool.set_Rectangle({ x: 0, y: 0, width: 0, height: 0 });
-
-        let panTool: Vintasoft.Imaging.UI.VisualTools.WebPanToolJS
-          = compositeTool.getTool(1) as Vintasoft.Imaging.UI.VisualTools.WebPanToolJS;
-        compositeTool.set_ActiveVisualTool(panTool);
-      }
+    // if touch device is used
+    if (_barcodeAdvancedDemoComponent.__isTouchDevice()) {
+      return new Vintasoft.Imaging.UI.UIElements.WebUiVisualToolButtonJS({
+        cssClass: "vsdv-tools-panButton",
+        title: "Highlight, Pan, Zoom",
+        localizationId: "panToolButton"
+      }, "HighlightTool,PanTool,ZoomTool");
+    }
+    else {
+      return new Vintasoft.Imaging.UI.UIElements.WebUiVisualToolButtonJS({
+        cssClass: "vsdv-tools-panButton",
+        title: "Highlight, Pan",
+        localizationId: "panToolButton"
+      }, "HighlightTool,PanTool");
     }
   }
 
@@ -147,31 +151,52 @@ export class BarcodeAdvancedDemoComponent {
    * Creates UI button for activating the visual tool, which allows to select the rectangular image region in image viewer.
    */
   __createRectangularSelectionToolButton() {
-    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-      cssClass: 'vsdv-tools-rectSelectionButton',
-      title: 'Rectangular selection',
-      localizationId: 'rectangularSelectionToolButton',
-      onClick: _barcodeAdvancedDemoComponent.__rectangularSelectionToolButton_clicked
-    });
+    return new Vintasoft.Imaging.UI.UIElements.WebUiVisualToolButtonJS({
+      cssClass: "vsdv-tools-rectSelectionButton",
+      title: "Highlight, Rectangular selection",
+      localizationId: "rectangularSelectionToolButton"
+    }, "HighlightTool,RectangularSelectionTool");
   }
 
+
+
+  // === "Barcode" toolbar ===
+
   /**
-   * "Rectangular selection" button is clicked.
-   * @param event
-   * @param uiElement
+   * Creates UI panel with barcode functionality.
    */
-  __rectangularSelectionToolButton_clicked(event: any, uiElement: Vintasoft.Imaging.UI.UIElements.WebUiElementJS) {
-    let docViewer: Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS = uiElement.get_RootControl() as Vintasoft.Imaging.DocumentViewer.WebDocumentViewerJS;
-    if (docViewer != null) {
-      let imageViewer: Vintasoft.Imaging.UI.WebImageViewerJS = docViewer.get_ImageViewer();
-      if (imageViewer != null) {
-        let compositeTool: Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS
-          = imageViewer.get_VisualTool() as Vintasoft.Imaging.UI.VisualTools.WebCompositeVisualToolJS;
-        let rectangularSelectionTool: Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS
-          = compositeTool.getTool(2) as Vintasoft.Imaging.UI.VisualTools.WebRectangularSelectionToolJS;
-        compositeTool.set_ActiveVisualTool(rectangularSelectionTool);
+  __createBarcodePanel(): Vintasoft.Imaging.UI.Panels.WebUiPanelJS | null {
+    let label: Vintasoft.Imaging.UI.UIElements.WebUiLabelElementJS =
+      new Vintasoft.Imaging.UI.UIElements.WebUiLabelElementJS({ "text": "Barcode", localizationId: "barcodeLabel" });
+    let button: Vintasoft.Imaging.UI.UIElements.WebUiElementContainerJS =
+      new Vintasoft.Imaging.UI.UIElements.WebUiElementContainerJS([label], { cssClass: "vsui-subMenu-icon" });
+
+    let readBarcodesButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+    let barcodeReaderSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+    let writeBarcodeButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+    let barcodeWriterSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+    if (_barcodeAdvancedDemoComponent._barcodeReaderUiHelper != null && _barcodeAdvancedDemoComponent._barcodeWriterUiHelper != null) {
+      readBarcodesButton = _barcodeAdvancedDemoComponent._barcodeReaderUiHelper.createReadBarcodesButton();
+      barcodeReaderSettingsButton = _barcodeAdvancedDemoComponent._barcodeReaderUiHelper.createBarcodeReaderSettingsButton();
+
+      writeBarcodeButton = _barcodeAdvancedDemoComponent._barcodeWriterUiHelper.createWriteBarcodeButton();
+      barcodeWriterSettingsButton = _barcodeAdvancedDemoComponent._barcodeWriterUiHelper.createBarcodeWriterSettingsButton();
+
+      if (readBarcodesButton != null && barcodeReaderSettingsButton != null &&
+        writeBarcodeButton != null && barcodeWriterSettingsButton != null) {
+        return new Vintasoft.Imaging.UI.Panels.WebUiPanelJS(
+          [Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("panToolButton"),
+          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("rectangularSelectionToolButton"),
+          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
+            readBarcodesButton,
+            barcodeReaderSettingsButton,
+          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
+            writeBarcodeButton,
+            barcodeWriterSettingsButton],
+          { cssClass: "vsui-subMenu-contentPanel" }, button);
       }
     }
+    return null;
   }
 
 
@@ -182,18 +207,18 @@ export class BarcodeAdvancedDemoComponent {
    * Registers custom UI elements in "WebUiElementsFactoryJS".
    */
   __registerNewUiElements() {
-    var barcodeReaderUiHelper = new BarcodeReaderUiHelper(this.modalService, this.__blockUI, this.__unblockUI, this.__showErrorMessage);
-    var barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.__showErrorMessage);
-
     // register the "Pan" button in web UI elements factory
     Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("panToolButton", this.__createPanToolButton);
     // register the "Rectangular selection" button in web UI elements factory
     Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("rectangularSelectionToolButton", this.__createRectangularSelectionToolButton);
 
-    // register the "Barcode reading" panel in web UI elements factory
-    Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("barcodeReadingPanel", barcodeReaderUiHelper.createBarcodeReadingPanel);
-    // register the "Barcode generation" panel in web UI elements factory
-    Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("barcodeWritingPanel", barcodeWriterUiHelper.createBarcodeWritingPanel);
+    if (this._barcodeReaderUiHelper != null) {
+      // register the "Barcode reading" panel in web UI elements factory
+      Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("barcodeReadingPanel", this._barcodeReaderUiHelper.createBarcodeReadingPanel);
+    }
+
+    // register the "Barcode" panel in web UI elements factory
+    Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.registerElement("barcodeMenuPanel", this.__createBarcodePanel);
   }
 
   /**
@@ -209,21 +234,18 @@ export class BarcodeAdvancedDemoComponent {
     if (uploadAndOpenFileButton != null)
       uploadAndOpenFileButton.set_FileExtensionFilter(".bmp, .cur, .doc, .docx, .gif, .ico, .j2k, .j2c, .jb2, .jbig2, .jp2, .jpc, .jpeg, .jpg, .jls, .pbm, .pcx, .pdf, .png, .tga, .tif, .tiff, .svg, .xls, .xlsx");
 
-    // get the "Visual tools" menu panel
-    let visualToolsToolbarPanel: Vintasoft.Imaging.UI.Panels.WebUiVisualToolsToolbarPanelJS
-      = items.getItemByRegisteredId("visualToolsToolbarPanel") as Vintasoft.Imaging.UI.Panels.WebUiVisualToolsToolbarPanelJS;
-    // if menu panel founded
-    if (visualToolsToolbarPanel != null) {
-      // get items of visual tool menu panel
-      let visualToolsToolbarPanelItems: Vintasoft.Imaging.UI.UIElements.WebUiElementCollectionJS
-        = visualToolsToolbarPanel.get_Items();
+    // get the main menu of document viewer
+    let mainMenu: Vintasoft.Imaging.UI.Panels.WebUiPanelContainerJS = items.getItemByRegisteredId("mainMenu") as Vintasoft.Imaging.UI.Panels.WebUiPanelContainerJS;
+    // if main menu is found
+    if (mainMenu != null) {
+      // get items of main menu
+      let mainMenuItems: Vintasoft.Imaging.UI.UIElements.WebUiElementCollectionJS = mainMenu.get_Items();
 
-      // remove all items
-      visualToolsToolbarPanelItems.clearItems();
-      // add "Pan" button to the menu panel
-      visualToolsToolbarPanelItems.addItem('panToolButton');
-      // add "Rectangular Selection" button to the menu panel
-      visualToolsToolbarPanelItems.addItem('rectangularSelectionToolButton');
+      // remove the "Tools" menu
+      mainMenuItems.removeItemAt(2);
+
+      // add new item to the main menu
+      mainMenuItems.addItem("barcodeMenuPanel");
     }
   }
 
@@ -243,7 +265,6 @@ export class BarcodeAdvancedDemoComponent {
         = sidePanel.get_PanelsCollection();
 
       sidePanelItems.addItem('barcodeReadingPanel');
-      sidePanelItems.addItem('barcodeWritingPanel');
     }
     // get the thumbnail viewer panel of document viewer
     let thumbnailViewerPanel: Vintasoft.Imaging.UI.Panels.WebUiThumbnailViewerPanelJS
@@ -352,8 +373,8 @@ export class BarcodeAdvancedDemoComponent {
   }
 
   /**
-   Unblocks the UI.
-  */
+   * Unblocks the UI.
+   */
   __unblockUI() {
     if (_barcodeAdvancedDemoComponent._blockUiDialog == null)
       return;
@@ -372,6 +393,13 @@ export class BarcodeAdvancedDemoComponent {
     let dlg: ErrorMessageDialog = new ErrorMessageDialog(_barcodeAdvancedDemoComponent.modalService);
     dlg.errorData = data;
     dlg.open();
+  }
+
+  /**
+   * Returns a value indicating whether touch device is used.
+   */
+  __isTouchDevice() {
+    return navigator.maxTouchPoints > 0;
   }
 
 }
