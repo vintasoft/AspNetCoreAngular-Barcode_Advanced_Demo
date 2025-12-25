@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using Vintasoft.Barcode.AspNetCore.ApiControllers;
 using Vintasoft.Barcode.Web.Services;

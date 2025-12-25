@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.IO;
-
-using Vintasoft.Barcode.Web.Services;
+﻿using Vintasoft.Barcode.Web.Services;
 using Vintasoft.Data;
 using Vintasoft.Imaging;
 using Vintasoft.Imaging.Codecs.Decoders;
