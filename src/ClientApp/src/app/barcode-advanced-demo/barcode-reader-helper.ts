@@ -140,8 +140,11 @@ export class BarcodeReaderHelper {
     // save information about recognized barcodes
     _barcodeReaderHelper._barcodeInformation = data.results;
 
+    // recognition time
+    let recognitionTime = "Recognition time: " + data.recognitionTime + " ms";
+
     // get text information about recognized barcodes
-    let infoAboutBarcodes = _barcodeReaderHelper.__getTextInformationAboutBarcodes(_barcodeReaderHelper._barcodeInformation);
+    let infoAboutBarcodes = recognitionTime + "\n\n" +_barcodeReaderHelper.__getTextInformationAboutBarcodes(_barcodeReaderHelper._barcodeInformation);
 
     // show information about recognized barcodes
     _barcodeReaderHelper.__writeBarcodeInformation(infoAboutBarcodes);

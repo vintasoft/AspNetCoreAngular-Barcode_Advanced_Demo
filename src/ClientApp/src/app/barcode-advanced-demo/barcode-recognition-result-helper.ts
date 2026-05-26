@@ -221,15 +221,32 @@ export class BarcodeRecognitionResultHelper {
       htmlMarkup += '<tr style="background-color:#DBD7D7"><td><b>Parameter</b></td><td><b>Value</b></td><td><b>Grade</b></td></tr>';
       if (testResult.decode != null)
         htmlMarkup += this.__createTableRowForQualityTestProperty("Decode", testResult.decode.value, testResult.decode.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("MaxReflectance", Number(testResult.maxReflectance.value).toFixed(1) + "%", testResult.maxReflectance.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("MinReflectance", Number(testResult.minReflectance.value).toFixed(1) + "%", testResult.minReflectance.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("GlobalThreshold", Number(testResult.globalThreshold.value).toFixed(1) + "%", testResult.globalThreshold.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("SymbolContrast", Number(testResult.symbolContrast.value).toFixed(1) + "%", testResult.symbolContrast.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("MinEdgeContrast", Number(testResult.minEdgeContrast.value).toFixed(1) + "%", testResult.minEdgeContrast.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("Modulation", Number(testResult.modulation.value).toFixed(2), testResult.modulation.grade);
-      htmlMarkup += this.__createTableRowForQualityTestProperty("Defects", Number(testResult.defects.value).toFixed(2), testResult.defects.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("MaxReflectance", testResult.maxReflectance.value, testResult.maxReflectance.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("MinReflectance", testResult.minReflectance.value, testResult.minReflectance.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("GlobalThreshold", testResult.globalThreshold.value, testResult.globalThreshold.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("SymbolContrast", testResult.symbolContrast.value, testResult.symbolContrast.grade);
+      if (testResult.minEdgeContrast != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("MinEdgeContrast", testResult.minEdgeContrast.value, testResult.minEdgeContrast.grade);
+      if (testResult.modulation != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("Modulation", testResult.modulation.value, testResult.modulation.grade);
+      if (testResult.defects != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("Defects", testResult.defects.value, testResult.defects.grade);
       if (testResult.decodability != null)
-        htmlMarkup += this.__createTableRowForQualityTestProperty("Decodability", Number(testResult.decodability.value).toFixed(2), testResult.decodability.grade);
+        htmlMarkup += this.__createTableRowForQualityTestProperty("Decodability", testResult.decodability.value, testResult.decodability.grade);
+      if (testResult.printContrastSignal != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("PrintContrastSignal", testResult.printContrastSignal.value, testResult.printContrastSignal.grade);
+      if (testResult.averageBarGain != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("AverageBarGain", testResult.averageBarGain.value, testResult.averageBarGain.grade);
+      if (testResult.whiteNarrowBarWidth != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("WhiteNarrowBarWidth", testResult.whiteNarrowBarWidth.value, testResult.whiteNarrowBarWidth.grade);
+      if (testResult.blackNarrowBarWidth != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("BlackNarrowBarWidth", testResult.blackNarrowBarWidth.value, testResult.blackNarrowBarWidth.grade);
+      if (testResult.blackWhiteRatio != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("BlackWhiteRatio", testResult.blackWhiteRatio.value, testResult.blackWhiteRatio.grade);
+      if (testResult.quietZoneLeft != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("QuietZoneLeft", testResult.quietZoneLeft.value, testResult.quietZoneLeft.grade);
+      if (testResult.quietZoneRight != null)
+        htmlMarkup += this.__createTableRowForQualityTestProperty("QuietZoneRight", testResult.quietZoneRight.value, testResult.quietZoneRight.grade);
       htmlMarkup += this.__createTableRowForQualityTestProperty("ScanGrade", testResult.scanGrade.value, testResult.scanGrade.grade);
       htmlMarkup += '</table>';
     }
@@ -246,9 +263,9 @@ export class BarcodeRecognitionResultHelper {
     htmlMarkup += '<table style="text-align:center; width:100%">';
     htmlMarkup += '<tr style="background-color:#DBD7D7"><td><b>Parameter</b></td><td><b>Value</b></td><td><b>Grade</b></td></tr>';
     htmlMarkup += this.__createTableRowForQualityTestProperty("Decode", testResult.decode.value, testResult.decode.grade);
-    htmlMarkup += this.__createTableRowForQualityTestProperty("UnusedErrorCorrection", Number(testResult.unusedErrorCorrection.value).toFixed(2) + "%", testResult.unusedErrorCorrection.grade);
+    htmlMarkup += this.__createTableRowForQualityTestProperty("UnusedErrorCorrection", testResult.unusedErrorCorrection.value, testResult.unusedErrorCorrection.grade);
     if (testResult.codewordYield != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("CodewordYield", testResult.codewordYield.value + "%", testResult.codewordYield.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("CodewordYield", testResult.codewordYield.value, testResult.codewordYield.grade);
     if (testResult.codewordPrintQualityModulation != null)
       htmlMarkup += this.__createTableRowForQualityTestProperty("CodewordPrintQualityModulation", testResult.codewordPrintQualityModulation.value, testResult.codewordPrintQualityModulation.grade);
     if (testResult.codewordPrintQualityDefects != null)
@@ -258,29 +275,28 @@ export class BarcodeRecognitionResultHelper {
     if (testResult.codewordPrintQuality != null)
       htmlMarkup += this.__createTableRowForQualityTestProperty("CodewordPrintQuality", testResult.codewordPrintQuality.value, testResult.codewordPrintQuality.grade);
     if (testResult.maxReflectance != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("MaxReflectance", Number(testResult.maxReflectance.value).toFixed(2) + "%", testResult.maxReflectance.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("MaxReflectance", testResult.maxReflectance.value, testResult.maxReflectance.grade);
     if (testResult.minReflectance != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("MinReflectance", Number(testResult.minReflectance.value).toFixed(2) + "%", testResult.minReflectance.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("MinReflectance", testResult.minReflectance.value, testResult.minReflectance.grade);
     if (testResult.symbolContrast != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("SymbolContrast", Number(testResult.symbolContrast.value).toFixed(2) + "%", testResult.symbolContrast.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("SymbolContrast", testResult.symbolContrast.value, testResult.symbolContrast.grade);
     if (testResult.axialNonuniformity != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("AxialNonuniformity", Number(testResult.axialNonuniformity.value).toFixed(2), testResult.axialNonuniformity.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("AxialNonuniformity", testResult.axialNonuniformity.value, testResult.axialNonuniformity.grade);
     if (testResult.gridNonuniformity != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("GridNonuniformity", Number(testResult.gridNonuniformity.value).toFixed(2) + " cell", testResult.gridNonuniformity.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("GridNonuniformity", testResult.gridNonuniformity.value, testResult.gridNonuniformity.grade);
     if (testResult.modulation != null)
       htmlMarkup += this.__createTableRowForQualityTestProperty("Modulation", testResult.modulation.value, testResult.modulation.grade);
-    if (testResult.reflectanceMargin != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("ReflectanceMargin", testResult.reflectanceMargin.value, testResult.reflectanceMargin.grade);
+    if (testResult.printGrowth != null)
+      htmlMarkup += this.__createTableRowForQualityTestProperty("PrintGrowth", testResult.printGrowth.value, testResult.printGrowth.grade);
     if (testResult.fixedPatternDamage != null)
       htmlMarkup += this.__createTableRowForQualityTestProperty("FixedPatternDamage", testResult.fixedPatternDamage.value, testResult.fixedPatternDamage.grade);
     if (testResult.additionalGrades != null)
-      for (let i = 0; i < testResult.additionalGrades.length; i++)
+      for (var i = 0; i < testResult.additionalGrades.length; i++)
         htmlMarkup += this.__createTableRowForQualityTestProperty(testResult.additionalGrades[i].value, "", testResult.additionalGrades[i].grade);
-
     if (testResult.quietZone != null)
-      htmlMarkup += this.__createTableRowForQualityTestProperty("QuietZone", Number(testResult.quietZone.value).toFixed(2) + "%", testResult.quietZone.grade);
-    htmlMarkup += this.__createTableRowForQualityTestProperty("DistortionAngle", Number(testResult.distortionAngle.value).toFixed(2) + "°", testResult.distortionAngle.grade);
-    htmlMarkup += this.__createTableRowForQualityTestProperty("ScanGrade", testResult.scanGrade.value, testResult.scanGrade.grade);
+      htmlMarkup += this.__createTableRowForQualityTestProperty("QuietZone", testResult.quietZone.value, testResult.quietZone.grade);
+    htmlMarkup += this.__createTableRowForQualityTestProperty("DistortionAngle", testResult.distortionAngle.value, testResult.distortionAngle.grade);
+    htmlMarkup += this.__createTableRowForQualityTestProperty("OverallSymbolGrade", testResult.overallSymbolGrade.value, testResult.overallSymbolGrade.grade);
     htmlMarkup += '</table>';
 
     if (testResult.startPattern != undefined) {

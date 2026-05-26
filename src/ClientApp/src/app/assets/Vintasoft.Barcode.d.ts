@@ -5,7 +5,7 @@
 // granted by VintaSoft LLC. This notice may not be removed or otherwise
 // altered under any circumstances.
 // This code may NOT be used apart of the VintaSoft product.
-﻿// NAMESPACE
+// NAMESPACE
 declare module Vintasoft.Barcode {
 
   // ===== ENUMS =====
@@ -86,6 +86,15 @@ declare module Vintasoft.Barcode {
    * Specifies available modes of threshold detection.
    */
   class WebThresholdModeEnumJS extends Vintasoft.Shared.WebEnumItemBaseJS {
+
+    constructor(value: string);
+
+  }
+
+  /**
+ * Specifies available image color inversion modes.
+ */
+  class WebImageInvertModeEnumJS extends Vintasoft.Shared.WebEnumItemBaseJS {
 
     constructor(value: string);
 
@@ -1817,17 +1826,6 @@ declare module Vintasoft.Barcode {
     set_Erode(value: boolean): void;
 
     /**
-     * Gets a value indicating whether the barcode reader must invert the image with barcodes before barcode search.
-     */
-    get_InvertImageColors(): boolean;
-
-    /**
-     * Sets a value indicating whether the barcode reader must invert the image with barcodes before barcode search.
-     * @param value True - the barcode reader must invert the image with barcodes before barcode search; False - the barcode reader must NOT invert the image with barcodes before barcode search.
-     */
-    set_InvertImageColors(value: boolean): void;
-
-    /**
      * Gets the threshold value for algorithm of color conversion.
      */
     get_Threshold(): number;
@@ -1883,6 +1881,17 @@ declare module Vintasoft.Barcode {
     set_ThresholdMode(value: Vintasoft.Barcode.WebThresholdModeEnumJS): void;
 
     /**
+    * Gets the image colors inversion mode.
+    */
+    get_ImageInvertMode(): Vintasoft.Barcode.WebImageInvertModeEnumJS;
+
+    /**
+     * Sets the image colors inversion mode.
+     * @param value An instance of [see="WebImageInvertModeEnumJS"] class that defines a mode of image inversion. Default value is "NoInvert".
+     */
+    set_ImageInvertMode(value: Vintasoft.Barcode.WebImageInvertModeEnumJS): void;
+
+    /**
      * Gets the recognition time-out, in milliseconds.
      */
     get_RecognitionTimeout(): number;
@@ -1903,6 +1912,17 @@ declare module Vintasoft.Barcode {
      * @param value A value indicating whether the barcode reader must search Code 39 barcodes without Start/Stop symbols.
      */
     set_SearchCode39WithoutStartStop(value: boolean): void;
+
+    /**
+       * Gets a value indicating whether the barcode reader should detect barcode regions using AI-based or custom barcode region detectors.
+       */
+    get_UseBarcodeRegionDetectors(): boolean;
+
+    /**
+     * Sets a value indicating whether the barcode reader should detect barcode regions using AI-based or custom barcode region detectors.
+     * @param value A value indicating whether the barcode reader should detect barcode regions using AI-based or custom barcode region detectors.
+     */
+    set_UseBarcodeRegionDetectors(value: boolean): void;
 
     /**
      * Gets a value indicating whether the barcode reader must search QR Code Model 1 barcodes.
