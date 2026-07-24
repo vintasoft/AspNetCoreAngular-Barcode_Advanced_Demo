@@ -9,6 +9,7 @@ import { BarcodeRecognitionResultHelper } from '../barcode-advanced-demo/barcode
 })
 export class BarcodeRecognitionResultDialogContent {
 
+  public barcodeReader: Vintasoft.Barcode.WebBarcodeReaderJS | null = null;
   public barcodeRecognitionResult: any;
 
 
@@ -20,7 +21,7 @@ export class BarcodeRecognitionResultDialogContent {
    * OnInit event occurs.
    */
   ngOnInit() {
-    let barcodeRecognitionResultHelper: BarcodeRecognitionResultHelper = new BarcodeRecognitionResultHelper();
+    let barcodeRecognitionResultHelper: BarcodeRecognitionResultHelper = new BarcodeRecognitionResultHelper(this.barcodeReader);
     let htmlMarkup: string = barcodeRecognitionResultHelper.createHtmlMarkupForBarcodeReadingResult(this.barcodeRecognitionResult);
 
     let barcodeInformationDialogElement: HTMLElement | null = document.getElementById("barcodeInformationDialog");
@@ -41,6 +42,7 @@ export class BarcodeRecognitionResultDialogContent {
 })
 export class BarcodeRecognitionResultDialog {
 
+  public barcodeReader: Vintasoft.Barcode.WebBarcodeReaderJS | null = null;
   public barcodeRecognitionResult: any;
   private _modalReference: NgbModalRef | null = null;
 
@@ -51,6 +53,7 @@ export class BarcodeRecognitionResultDialog {
 
   public open() {
     this._modalReference = this.modalService.open(BarcodeRecognitionResultDialogContent);
+    this._modalReference.componentInstance.barcodeReader = this.barcodeReader;
     this._modalReference.componentInstance.barcodeRecognitionResult = this.barcodeRecognitionResult;
   }
 

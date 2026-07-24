@@ -1,6 +1,10 @@
 export class BarcodeRecognitionResultHelper {
 
-  constructor() {
+  _barcodeReader: Vintasoft.Barcode.WebBarcodeReaderJS | null;
+
+
+  constructor(barcodeReader: Vintasoft.Barcode.WebBarcodeReaderJS | null) {
+    this._barcodeReader = barcodeReader;
   }
 
 
@@ -30,6 +34,12 @@ export class BarcodeRecognitionResultHelper {
       htmlMarkup += this.createMarkupWithInformationAboutSwissQrCodeBarcode(barcodeRecognitionResult, true, '<br />') + '<br />';
       htmlMarkup += '<b>Base value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.baseValue) + '<br />';
     }
+    else if (barcodeRecognitionResult.barcodeType == "IATA BCBP Aztec" || barcodeRecognitionResult.barcodeType == "IATA BCBP DataMatrix" ||
+      barcodeRecognitionResult.barcodeType == "IATA BCBP PDF417" || barcodeRecognitionResult.barcodeType == "IATA BCBP QR Code") {
+      htmlMarkup += '<b>Value: </b><br />';
+      htmlMarkup += this.createMarkupWithInformationAboutIataBcbpBarcode(barcodeRecognitionResult, true, '<br />') + '<br />';
+      htmlMarkup += '<b>Base value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.baseValue) + '<br />';
+    }
     else {
       htmlMarkup += '<b>Value: </b><br />' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.value) + '<br />';
       if (barcodeRecognitionResult.baseValue != null && barcodeRecognitionResult.value != barcodeRecognitionResult.baseValue) {
@@ -43,7 +53,7 @@ export class BarcodeRecognitionResultHelper {
     htmlMarkup += '<b>Region: </b>' + 'LT=(' + barcodeRecognitionResult.region.leftTop.x + ',' + barcodeRecognitionResult.region.leftTop.y + '); RT=(' +
       barcodeRecognitionResult.region.rightTop.x + ',' + barcodeRecognitionResult.region.rightTop.y + '); LB=(' + barcodeRecognitionResult.region.leftBottom.x +
       ',' + barcodeRecognitionResult.region.leftBottom.y + '); RB=(' + barcodeRecognitionResult.region.rightBottom.x + ',' + barcodeRecognitionResult.region.rightBottom.y +
-      ');Angle=' + barcodeRecognitionResult.region.angle.toFixed(1) + '°<br />';
+      '); Angle=' + barcodeRecognitionResult.region.angle.toFixed(1) + '°<br />';
 
     // 1D
     if (barcodeRecognitionResult.className == "WebBarcodeRecognition1DResult") {
@@ -73,6 +83,15 @@ export class BarcodeRecognitionResultHelper {
       }
       else {
         htmlMarkup += this.__createMarkupForISO15415TestResult(barcodePrintQualityTestResult);
+      }
+    }
+    else {
+      htmlMarkup += '<br />';
+      if (this._barcodeReader != null && this._barcodeReader.get_Settings().get_CollectTestInformation()) {
+        htmlMarkup += "Barcode print quality test is not supported for this barcode type.<br />";
+      }
+      else {
+        htmlMarkup += "Barcode print quality test information is not collected. Please open 'Reader Settings' and set value of 'CollectTestInformation' property to 'true' if you want to collect the barcode print quality test information.<br />";
       }
     }
 
@@ -187,6 +206,52 @@ export class BarcodeRecognitionResultHelper {
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('Bill information', barcodeRecognitionResult.decodedValue.billInformation, isBoldParameterTitle, brText);
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('Alternative scheme parameters 1', barcodeRecognitionResult.decodedValue.alternativeSchemeParameters1, isBoldParameterTitle, brText);
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('Alternative scheme parameters 2', barcodeRecognitionResult.decodedValue.alternativeSchemeParameters2, isBoldParameterTitle, '');
+    return htmlMarkup;
+  }
+
+  /**
+   Creates a HTML markup with information about recognized IATA BCBPe barcode.
+   @param barcodeRecognitionResult Information about barcode.
+   @param isBoldTextLabel A value indicating whether the parameter title must be shown using bold font.
+   @param brText A string that should be used as line break symbol.
+  */
+  public createMarkupWithInformationAboutIataBcbpBarcode(barcodeRecognitionResult: any, isBoldParameterTitle: boolean, brText: string): string {
+    var htmlMarkup = this.__createMarkupForBarcodeInfoParameter('AirlineDesignatorOfIssuer', barcodeRecognitionResult.decodedValue.airlineDesignatorOfIssuer, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('AirlineNumericCode', barcodeRecognitionResult.decodedValue.airlineNumericCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('BaggageTagLicensePlate', barcodeRecognitionResult.decodedValue.baggageTagLicensePlate, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('CheckInSequenceNumber', barcodeRecognitionResult.decodedValue.checkInSequenceNumber, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('CompartmentCode', barcodeRecognitionResult.decodedValue.compartmentCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('ConditionalsSize', barcodeRecognitionResult.decodedValue.conditionalsSize, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('DateOfFlight', barcodeRecognitionResult.decodedValue.dateOfFlight, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('DateOfPassIssuance', barcodeRecognitionResult.decodedValue.dateOfPassIssuance, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('DocumentType', barcodeRecognitionResult.decodedValue.documentType, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('ElectronicTicketIndicator', barcodeRecognitionResult.decodedValue.electronicTicketIndicator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FirstBaggageTagLicensePlate', barcodeRecognitionResult.decodedValue.firstBaggageTagLicensePlate, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FlightNumber', barcodeRecognitionResult.decodedValue.flightNumber, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FormatCode', barcodeRecognitionResult.decodedValue.formatCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FreeBaggageAllowance', barcodeRecognitionResult.decodedValue.freeBaggageAllowance, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FrequentFlyerAirlineDesignator', barcodeRecognitionResult.decodedValue.frequentFlyerAirlineDesignator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FrequentFlyerNumber', barcodeRecognitionResult.decodedValue.frequentFlyerNumber, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('FromCityAirportCode', barcodeRecognitionResult.decodedValue.fromCityAirportCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('IdAdIndicator', barcodeRecognitionResult.decodedValue.idAdIndicator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('InternationalDocumentVerification', barcodeRecognitionResult.decodedValue.internationalDocumentVerification, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('MarketingCarrierDesignator', barcodeRecognitionResult.decodedValue.marketingCarrierDesignator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('NumberOfSegments', barcodeRecognitionResult.decodedValue.numberOfSegments, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('OperatingCarrierDesignator', barcodeRecognitionResult.decodedValue.operatingCarrierDesignator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('OperatingCarrierPnrCode', barcodeRecognitionResult.decodedValue.operatingCarrierPnrCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('PassengerDescription', barcodeRecognitionResult.decodedValue.passengerDescription, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('PassengerName', barcodeRecognitionResult.decodedValue.passengerName, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('PassengerStatus', barcodeRecognitionResult.decodedValue.passengerStatus, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('RepeatedConditionalsSize', barcodeRecognitionResult.decodedValue.repeatedConditionalsSize, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SeatNumber', barcodeRecognitionResult.decodedValue.seatNumber, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SecondBaggageTagLicensePlate', barcodeRecognitionResult.decodedValue.secondBaggageTagLicensePlate, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SelecteeIndicator', barcodeRecognitionResult.decodedValue.selecteeIndicator, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SerialNumber', barcodeRecognitionResult.decodedValue.serialNumber, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SourceOfBoardingPassIssuance', barcodeRecognitionResult.decodedValue.sourceOfBoardingPassIssuance, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('SourceOfCheckIn', barcodeRecognitionResult.decodedValue.sourceOfCheckIn, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('ToCityAirportCode', barcodeRecognitionResult.decodedValue.toCityAirportCode, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('UniqueConditionalsSize', barcodeRecognitionResult.decodedValue.uniqueConditionalsSize, isBoldParameterTitle, brText);
+    htmlMarkup += this.__createMarkupForBarcodeInfoParameter('VersionNumber', barcodeRecognitionResult.decodedValue.versionNumber, isBoldParameterTitle, brText);
     return htmlMarkup;
   }
 

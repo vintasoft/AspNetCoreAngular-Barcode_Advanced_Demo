@@ -1,3 +1,6 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Gs1ValueEditorDialog } from "../dialogs/gs1-value-editor-dialog";
+
 let _barcodeWriterUiHelper: BarcodeWriterUiHelper;
 
 /**
@@ -24,7 +27,7 @@ export class BarcodeWriterUiHelper {
 
 
 
-  constructor(showErrorMessageFunc: Function) {
+  constructor(private modalService: NgbModal, showErrorMessageFunc: Function) {
     _barcodeWriterUiHelper = this;
     this._dialogInitialized = false;
 
@@ -81,14 +84,28 @@ export class BarcodeWriterUiHelper {
   createBarcodeWriterSettingsButton() {
     // create the button that allows to view and change the barcode writer settings
     return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
-        cssClass: 'barcodeWriterSettings',
-        title: 'Barcode writer settings',
-        localizationId: 'barcodeWriterSettingsButton',
-        css: {
-          "margin-left": "5px"
-        },
-        onClick: _barcodeWriterUiHelper.__barcodeWriterSettingsButton_clicked
-      });
+      cssClass: 'barcodeWriterSettings',
+      title: 'Barcode writer settings',
+      localizationId: 'barcodeWriterSettingsButton',
+      css: {
+        "margin-left": "5px"
+      },
+      onClick: _barcodeWriterUiHelper.__barcodeWriterSettingsButton_clicked
+    });
+  }
+
+  /**
+   * Creates UI button that allows to edit the GS1 value.
+   */
+  createGs1ValueEditorButton() {
+    // create the button that allows to edit the GS1 value
+    return new Vintasoft.Imaging.UI.UIElements.WebUiButtonJS({
+      cssClass: "gs1ValueEditor",
+      title: "GS1 value editor",
+      localizationId: "gs1ValueEditorButton",
+      css: { "margin-left": "5px" },
+      onClick: this.__gs1ValueEditorButton_clicked
+    });
   }
 
   /**
@@ -182,4 +199,10 @@ export class BarcodeWriterUiHelper {
 
     _barcodeWriterUiHelper._barcodeWriterSettingsDialog.show();
   }
+
+  __gs1ValueEditorButton_clicked(event: any, uiElement: any) {
+    let dialog = new Gs1ValueEditorDialog(_barcodeWriterUiHelper.modalService);
+    dialog.open();
+  }
+
 }

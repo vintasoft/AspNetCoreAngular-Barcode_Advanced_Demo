@@ -39,7 +39,7 @@ export class BarcodeReaderHelper {
     this._unblockUiFunc = unblockUiFunc;
     this._showErrorMessageFunc = showErrorMessageFunc;
 
-    this.barcodeRecognitionResultHelper = new BarcodeRecognitionResultHelper();
+    this.barcodeRecognitionResultHelper = new BarcodeRecognitionResultHelper(this._barcodeReader);
   }
 
 
@@ -319,6 +319,10 @@ export class BarcodeReaderHelper {
         }
         else if (barcodeInfo.barcodeType == "Swiss QR Code") {
           barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutSwissQrCodeBarcode(barcodeInfo, false, '\n') + '\n===';
+        }
+        else if (barcodeInfo.barcodeType == "IATA BCBP Aztec" || barcodeInfo.barcodeType == "IATA BCBP DataMatrix" ||
+          barcodeInfo.barcodeType == "IATA BCBP PDF417" || barcodeInfo.barcodeType == "IATA BCBP QR Code") {
+          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutIataBcbpBarcode(barcodeInfo, false, '\n') + '\n===';
         }
         else {
           barcodeValue = barcodeInfo.value;

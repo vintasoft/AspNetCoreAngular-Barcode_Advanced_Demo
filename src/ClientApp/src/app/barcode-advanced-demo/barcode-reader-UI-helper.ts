@@ -271,6 +271,8 @@ export class BarcodeReaderUiHelper {
   __showBarcodeResultDialog(barcodeInfo: object) {
     // create a modal window with the barcode reading result
     let dlg: BarcodeRecognitionResultDialog = new BarcodeRecognitionResultDialog(_barcodeReaderUiHelper.modalService);
+    if (_barcodeReaderUiHelper._barcodeReaderHelper != null)
+      dlg.barcodeReader = _barcodeReaderUiHelper._barcodeReaderHelper._barcodeReader;
     dlg.barcodeRecognitionResult = barcodeInfo;
     dlg.open();
   }

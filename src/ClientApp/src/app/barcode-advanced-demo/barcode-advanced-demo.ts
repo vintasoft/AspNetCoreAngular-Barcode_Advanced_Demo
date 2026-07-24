@@ -55,7 +55,7 @@ export class BarcodeAdvancedDemoComponent {
       Vintasoft.Shared.WebServiceJS.defaultBarcodeService = new Vintasoft.Shared.WebServiceControllerJS("vintasoft/api/MyVintasoftBarcodeApi");
 
       this._barcodeReaderUiHelper = new BarcodeReaderUiHelper(this.modalService, this.__blockUI, this.__unblockUI, this.__showErrorMessage);
-      this._barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.__showErrorMessage);
+      this._barcodeWriterUiHelper = new BarcodeWriterUiHelper(this.modalService, this.__showErrorMessage);
 
       // register new UI elements
       this.__registerNewUiElements();
@@ -175,24 +175,26 @@ export class BarcodeAdvancedDemoComponent {
     let barcodeReaderSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
     let writeBarcodeButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
     let barcodeWriterSettingsButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
+    let gs1ValueEditorButton: Vintasoft.Imaging.UI.UIElements.WebUiButtonJS | null = null;
     if (_barcodeAdvancedDemoComponent._barcodeReaderUiHelper != null && _barcodeAdvancedDemoComponent._barcodeWriterUiHelper != null) {
       readBarcodesButton = _barcodeAdvancedDemoComponent._barcodeReaderUiHelper.createReadBarcodesButton();
       barcodeReaderSettingsButton = _barcodeAdvancedDemoComponent._barcodeReaderUiHelper.createBarcodeReaderSettingsButton();
 
       writeBarcodeButton = _barcodeAdvancedDemoComponent._barcodeWriterUiHelper.createWriteBarcodeButton();
       barcodeWriterSettingsButton = _barcodeAdvancedDemoComponent._barcodeWriterUiHelper.createBarcodeWriterSettingsButton();
+      gs1ValueEditorButton = _barcodeAdvancedDemoComponent._barcodeWriterUiHelper.createGs1ValueEditorButton();
 
       if (readBarcodesButton != null && barcodeReaderSettingsButton != null &&
         writeBarcodeButton != null && barcodeWriterSettingsButton != null) {
         return new Vintasoft.Imaging.UI.Panels.WebUiPanelJS(
-          [Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("panToolButton"),
-          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("rectangularSelectionToolButton"),
-          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
-            readBarcodesButton,
-            barcodeReaderSettingsButton,
-          Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
-            writeBarcodeButton,
-            barcodeWriterSettingsButton],
+          [
+            Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("panToolButton"),
+            Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("rectangularSelectionToolButton"),
+            Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
+            readBarcodesButton, barcodeReaderSettingsButton,
+            Vintasoft.Imaging.UI.UIElements.WebUiElementsFactoryJS.createElementById("vertDivider"),
+            writeBarcodeButton, barcodeWriterSettingsButton, gs1ValueEditorButton
+          ],
           { cssClass: "vsui-subMenu-contentPanel" }, button);
       }
     }
