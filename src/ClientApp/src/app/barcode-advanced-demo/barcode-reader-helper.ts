@@ -144,7 +144,7 @@ export class BarcodeReaderHelper {
     let recognitionTime = "Recognition time: " + data.recognitionTime + " ms";
 
     // get text information about recognized barcodes
-    let infoAboutBarcodes = recognitionTime + "\n\n" +_barcodeReaderHelper.__getTextInformationAboutBarcodes(_barcodeReaderHelper._barcodeInformation);
+    let infoAboutBarcodes = recognitionTime + "\n\n" + _barcodeReaderHelper.__getTextInformationAboutBarcodes(_barcodeReaderHelper._barcodeInformation);
 
     // show information about recognized barcodes
     _barcodeReaderHelper.__writeBarcodeInformation(infoAboutBarcodes);
@@ -307,30 +307,39 @@ export class BarcodeReaderHelper {
       for (let i = 0; i < barcodeInfoArray.length; i++) {
         let barcodeInfo = barcodeInfoArray[i];
 
+        information += '[' + (i + 1) + ':' + barcodeInfo.barcodeType + ']\n';
+
+        var barcodeRecognitionResultHelper = _barcodeReaderHelper.barcodeRecognitionResultHelper;
+
         var barcodeValue;
         if (barcodeInfo.barcodeType == "Mailmark CMDM Type7" || barcodeInfo.barcodeType == "Mailmark CMDM Type9" || barcodeInfo.barcodeType == "Mailmark CMDM Type29") {
-          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutMailmarkCMDMBarcode(barcodeInfo, false, '\n') + '\n===';
+          information += '\n===\n' + barcodeRecognitionResultHelper.createMarkupWithInformationAboutMailmarkCMDMBarcode(barcodeInfo, false, '\n') + '\n===';
         }
         else if (barcodeInfo.barcodeType == "PPN") {
-          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutPpnBarcode(barcodeInfo, false, '\n') + '\n===';
+          information += '\n===\n' + barcodeRecognitionResultHelper.createMarkupWithInformationAboutPpnBarcode(barcodeInfo, false, '\n') + '\n===';
         }
         else if (barcodeInfo.barcodeType == "AAMVA") {
-          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutAamvaBarcode(barcodeInfo, false, '\n') + '\n===';
+          information += '\n===\n' + barcodeRecognitionResultHelper.createMarkupWithInformationAboutAamvaBarcode(barcodeInfo, false, '\n') + '\n===';
         }
         else if (barcodeInfo.barcodeType == "Swiss QR Code") {
-          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutSwissQrCodeBarcode(barcodeInfo, false, '\n') + '\n===';
+          information += '\n===\n' + barcodeRecognitionResultHelper.createMarkupWithInformationAboutSwissQrCodeBarcode(barcodeInfo, false, '\n') + '\n===';
         }
-        else if (barcodeInfo.barcodeType == "IATA BCBP Aztec" || barcodeInfo.barcodeType == "IATA BCBP DataMatrix" ||
-          barcodeInfo.barcodeType == "IATA BCBP PDF417" || barcodeInfo.barcodeType == "IATA BCBP QR Code") {
-          barcodeValue = '\n===\n' + _barcodeReaderHelper.barcodeRecognitionResultHelper.createMarkupWithInformationAboutIataBcbpBarcode(barcodeInfo, false, '\n') + '\n===';
+        else if (barcodeInfo.barcodeType == "IATA BCBP Aztec" || barcodeInfo.barcodeType == "IATA BCBP DataMatrix" || barcodeInfo.barcodeType == "IATA BCBP PDF417" || barcodeInfo.barcodeType == "IATA BCBP QR Code") {
+          information += '\n===\n' + barcodeRecognitionResultHelper.createMarkupWithInformationAboutIataBcbpBarcode(barcodeInfo, false, '\n') + '\n===';
+        }
+        else if (barcodeInfo.barcodeType.substring(0, 3) == "GS1") {
+          information += 'Value: ' + barcodeInfo.value + '\n\n';
+          information += 'Base value: ' + barcodeInfo.baseValue + '\n\n';
+          information += 'GS1 decoded value: ' + '\n';
+          information += '===\n';
+          information += barcodeRecognitionResultHelper.createMarkupWithInformationAboutGS1Barcode(barcodeInfo, false, '\n') + '\n';
+          information += '===\n\n';
         }
         else {
-          barcodeValue = barcodeInfo.value;
+          information += 'Value: ' + barcodeValue + '\n';
         }
 
-        // create a string with information about barcode
-        information += '[' + (i + 1) + ':' + barcodeInfo.barcodeType + ']\n' +
-          'Value: ' + barcodeValue + '\n' +
+        information +=
           'Confidence: ' + barcodeInfo.confidence + '\n' +
           'ReadingQuality: ' + barcodeInfo.readingQuality.toFixed(2) + '\n' +
           'Threshold: ' + barcodeInfo.threshold + '\n' +

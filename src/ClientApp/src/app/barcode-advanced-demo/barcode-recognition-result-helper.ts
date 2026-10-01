@@ -34,11 +34,18 @@ export class BarcodeRecognitionResultHelper {
       htmlMarkup += this.createMarkupWithInformationAboutSwissQrCodeBarcode(barcodeRecognitionResult, true, '<br />') + '<br />';
       htmlMarkup += '<b>Base value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.baseValue) + '<br />';
     }
-    else if (barcodeRecognitionResult.barcodeType == "IATA BCBP Aztec" || barcodeRecognitionResult.barcodeType == "IATA BCBP DataMatrix" ||
-      barcodeRecognitionResult.barcodeType == "IATA BCBP PDF417" || barcodeRecognitionResult.barcodeType == "IATA BCBP QR Code") {
+    else if (barcodeRecognitionResult.barcodeType == "IATA BCBP Aztec" || barcodeRecognitionResult.barcodeType == "IATA BCBP DataMatrix" || barcodeRecognitionResult.barcodeType == "IATA BCBP PDF417" || barcodeRecognitionResult.barcodeType == "IATA BCBP QR Code") {
       htmlMarkup += '<b>Value: </b><br />';
       htmlMarkup += this.createMarkupWithInformationAboutIataBcbpBarcode(barcodeRecognitionResult, true, '<br />') + '<br />';
       htmlMarkup += '<b>Base value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.baseValue) + '<br />';
+    }
+    else if (barcodeRecognitionResult.barcodeType.substring(0, 3) == "GS1") {
+      htmlMarkup += '<b>Value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.value) + '<br />';
+      htmlMarkup += '<b>Base value: </b>' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.baseValue) + '<br />';
+      htmlMarkup += '<b>GS1 Decoded value: </b><br />';
+      htmlMarkup += '===<br />';
+      htmlMarkup += this.createMarkupWithInformationAboutGS1Barcode(barcodeRecognitionResult, true, '<br />') + '<br />';
+      htmlMarkup += '===<br />';
     }
     else {
       htmlMarkup += '<b>Value: </b><br />' + this.__replaceSpecialHtmlChars(barcodeRecognitionResult.value) + '<br />';
@@ -252,6 +259,26 @@ export class BarcodeRecognitionResultHelper {
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('ToCityAirportCode', barcodeRecognitionResult.decodedValue.toCityAirportCode, isBoldParameterTitle, brText);
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('UniqueConditionalsSize', barcodeRecognitionResult.decodedValue.uniqueConditionalsSize, isBoldParameterTitle, brText);
     htmlMarkup += this.__createMarkupForBarcodeInfoParameter('VersionNumber', barcodeRecognitionResult.decodedValue.versionNumber, isBoldParameterTitle, brText);
+    return htmlMarkup;
+  }
+
+  /**
+   Creates a HTML markup with information about recognized GS1 barcode.
+   @param {object} barcodeInfo Information about barcode.
+   @param {boolean} isBoldTextLabel A value indicating whether the parameter title must be shown using bold font.
+   @param {string} brText A string that should be used as line break symbol.
+  */
+  public createMarkupWithInformationAboutGS1Barcode(barcodeRecognitionResult: any, isBoldParameterTitle: boolean, brText: string): string {
+    var htmlMarkup = "";
+    if (barcodeRecognitionResult.applicationIdentifierValues != null) {
+      for (var i = 0; i < barcodeRecognitionResult.applicationIdentifierValues.length; i++) {
+        if (i == (barcodeRecognitionResult.applicationIdentifierValues.length - 1))
+          brText = '';
+
+        var applicationIdentifierValue = barcodeRecognitionResult.applicationIdentifierValues[i];
+        htmlMarkup += this.__createMarkupForBarcodeInfoParameter(applicationIdentifierValue.applicationIdentifier.dataContent, applicationIdentifierValue.value, isBoldParameterTitle, brText);
+      }
+    }
     return htmlMarkup;
   }
 
